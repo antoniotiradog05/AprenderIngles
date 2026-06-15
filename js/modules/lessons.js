@@ -127,7 +127,7 @@ const Lessons = {
       <div class="card card-glass mb-lg animate-fade-in" style="padding: 1.5rem;">
         <h3 style="margin-top: 0;">⏰ Comparación Visual de Tiempos Verbales</h3>
         <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.5rem;">
-          Comprender la relación temporal entre los diferentes tiempos verbales es fundamental. Haz clic en cualquier tiempo de la línea para estudiar su uso, fórmula y cómo se compara con los demás.
+          Comprender la relación temporal entre los diferentes tiempos verbales es fundamental. Haz clic en cualquier tiempo de la línea para estudiar su uso, ver su **gráfico temporal** y compararlo de forma directa con otros tiempos.
         </p>
       </div>
 
@@ -224,7 +224,7 @@ const Lessons = {
         </div>
       </div>
 
-      <div id="timeline-tense-details" class="card card-glass animate-fade-in" style="min-height: 200px; display:none; padding: 1.5rem; border-left: 5px solid var(--color-primary);">
+      <div id="timeline-tense-details" class="card card-glass animate-fade-in" style="min-height: 200px; display:none; padding: 1.5rem; border-left: 5px solid var(--color-primary); margin-bottom: 2rem;">
         <!-- Tense details loaded dynamically -->
       </div>
     `;
@@ -258,6 +258,14 @@ const Lessons = {
         void detailsContainer.offsetWidth; // Trigger reflow
         detailsContainer.style.animation = 'fadeIn var(--transition-normal) ease';
 
+        // Filter list of tenses to compare with
+        const availableComparisons = [
+          { key: 'past_simple-present_perfect', label: 'Past Simple vs. Present Perfect' },
+          { key: 'past_simple-past_continuous', label: 'Past Simple vs. Past Continuous' },
+          { key: 'present_simple-present_continuous', label: 'Present Simple vs. Present Continuous' },
+          { key: 'future_will-going_to', label: 'Future (Will) vs. Future (Going to)' }
+        ].filter(c => c.key.includes(tenseKey));
+
         detailsContainer.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom: 1rem;">
             <div>
@@ -265,6 +273,12 @@ const Lessons = {
               <p style="margin:2px 0 0 0; font-size:0.875rem; color:var(--text-muted)">${topic.titleEs}</p>
             </div>
             <span class="level-pill level-${topic.level}">${topic.level}</span>
+          </div>
+
+          <!-- DYNAMIC GRAPHIC SVG TIMELINE -->
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="margin:0 0 0.5rem 0; font-size:0.875rem;">Representación Gráfica Temporal:</h4>
+            ${this._getTenseSVG(tenseKey)}
           </div>
 
           <p style="font-size:0.9rem; line-height:1.6; color:var(--text-secondary); margin-bottom: 1rem;">${topic.description}</p>
@@ -293,14 +307,26 @@ const Lessons = {
           </div>
 
           ${topic.signals && topic.signals.length ? `
-          <div style="margin-bottom:1rem;">
+          <div style="margin-bottom:1.5rem;">
             <h4 style="margin:0 0 0.5rem 0; font-size:0.875rem;">Palabras Señal (Signal Words)</h4>
             <div style="display:flex; flex-wrap:wrap; gap:0.25rem;">
               ${topic.signals.map(s => `<span class="badge badge-warning" style="font-size:0.65rem; padding:2px 6px;">${s}</span>`).join('')}
             </div>
           </div>` : ''}
 
-          <div style="margin-top:1.5rem; display:flex; gap:1rem;">
+          <!-- SIDE BY SIDE COMPARISON SELECTOR -->
+          ${availableComparisons.length ? `
+          <div style="border-top:1px solid var(--border-color); padding-top:1.5rem; margin-top:1.5rem;">
+            <h4 style="margin:0 0 0.75rem 0; font-size:0.875rem;">🔍 Comparación Rápida con otros Tiempos:</h4>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom: 1rem;">
+              ${availableComparisons.map(c => `
+                <button class="btn btn-ghost btn-sm tense-compare-action-btn" data-comp-key="${c.key}" style="font-size:0.75rem;">Comparar: ${c.label}</button>
+              `).join('')}
+            </div>
+            <div id="side-by-side-comparison-box"></div>
+          </div>` : ''}
+
+          <div style="margin-top:2rem; display:flex; gap:1rem; border-top:1px solid var(--border-color); padding-top:1.5rem;">
             <button class="btn btn-primary btn-sm" id="timeline-go-to-lesson">📚 Ver Lección Completa</button>
             <button class="btn btn-ghost btn-sm" id="timeline-go-to-practice">✏️ Practicar</button>
           </div>
@@ -312,11 +338,230 @@ const Lessons = {
         document.getElementById('timeline-go-to-practice').addEventListener('click', () => {
           App.navigate('exercises', { topic: topic.id });
         });
+
+        // Add side-by-side comparison action handlers
+        const compBox = document.getElementById('side-by-side-comparison-box');
+        tabContent.querySelectorAll('.tense-compare-action-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.compKey;
+            const parts = key.split('-');
+            compBox.innerHTML = this._showSideBySideComparison(parts[0], parts[1]);
+            
+            // Toggle active styling
+            tabContent.querySelectorAll('.tense-compare-action-btn').forEach(b => b.classList.remove('btn-primary'));
+            btn.classList.add('btn-primary');
+          });
+        });
+
+        // Automatically activate first comparison if available
+        const firstCompBtn = tabContent.querySelector('.tense-compare-action-btn');
+        if (firstCompBtn) firstCompBtn.click();
       });
     });
 
     // Auto click first item
     if (items.length > 0) items[2].click(); // Click Past Simple as a good central starting point
+  },
+
+  _getTenseSVG(tenseKey) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#f3f4f6' : '#1f2937';
+    const textMuted = isDark ? '#9ca3af' : '#6b7280';
+    const gridColor = isDark ? '#374151' : '#e5e7eb';
+    
+    let graphic = '';
+    
+    switch (tenseKey) {
+      case 'past_simple':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="250" y1="40" x2="250" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="250" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <circle cx="120" cy="50" r="8" fill="var(--color-primary)" />
+          <line x1="120" y1="50" x2="120" y2="25" stroke="var(--color-primary)" stroke-width="2" />
+          <text x="120" y="20" fill="var(--color-primary)" font-size="11" font-weight="bold" text-anchor="middle">Acción terminada (X)</text>
+        `;
+        break;
+      case 'past_continuous':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="250" y1="40" x2="250" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="250" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <rect x="70" y="42" width="100" height="16" rx="8" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2" />
+          <text x="120" y="32" fill="var(--color-primary)" font-size="11" font-weight="bold" text-anchor="middle">Acción en progreso</text>
+        `;
+        break;
+      case 'past_perfect':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="280" y1="40" x2="280" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="280" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <circle cx="80" cy="50" r="8" fill="var(--color-primary)" />
+          <text x="80" y="25" fill="var(--color-primary)" font-size="10" font-weight="bold" text-anchor="middle">1. Past Perfect</text>
+          <text x="80" y="38" fill="var(--color-primary)" font-size="9" text-anchor="middle">(Había ocurrido)</text>
+          
+          <circle cx="180" cy="50" r="8" fill="var(--color-accent)" />
+          <text x="180" y="25" fill="var(--color-accent)" font-size="10" font-weight="bold" text-anchor="middle">2. Past Simple</text>
+          <text x="180" y="38" fill="var(--color-accent)" font-size="9" text-anchor="middle">(Ocurrió después)</text>
+          
+          <path d="M 95 50 L 165 50" stroke="${textMuted}" stroke-width="1.5" stroke-dasharray="3" />
+        `;
+        break;
+      case 'present_simple':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="200" y1="40" x2="200" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="200" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <circle cx="80" cy="50" r="5" fill="var(--color-accent)" />
+          <circle cx="140" cy="50" r="5" fill="var(--color-accent)" />
+          <circle cx="200" cy="50" r="6" fill="var(--color-accent)" />
+          <circle cx="260" cy="50" r="5" fill="var(--color-accent)" />
+          <circle cx="320" cy="50" r="5" fill="var(--color-accent)" />
+          
+          <text x="200" y="25" fill="var(--color-accent)" font-size="11" font-weight="bold" text-anchor="middle">Rutina / Hábito repetido</text>
+        `;
+        break;
+      case 'present_continuous':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="200" y1="40" x2="200" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="200" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <circle cx="200" cy="50" r="16" fill="var(--color-accent-light)" opacity="0.5" stroke="var(--color-accent)" stroke-width="1.5" />
+          <circle cx="200" cy="50" r="6" fill="var(--color-accent)" />
+          <text x="200" y="25" fill="var(--color-accent)" font-size="11" font-weight="bold" text-anchor="middle">En este mismo instante</text>
+        `;
+        break;
+      case 'present_perfect':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="280" y1="40" x2="280" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="280" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <path d="M 80,50 Q 180,15 280,50" fill="none" stroke="var(--color-accent)" stroke-width="3" />
+          <circle cx="80" cy="50" r="6" fill="var(--color-accent)" />
+          <circle cx="280" cy="50" r="6" fill="var(--color-accent)" />
+          <text x="180" y="20" fill="var(--color-accent)" font-size="10" font-weight="bold" text-anchor="middle">Conexión Pasado → Presente</text>
+        `;
+        break;
+      case 'future_will':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" stroke-dasharray="4" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="120" y1="40" x2="120" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="120" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <circle cx="280" cy="50" r="8" fill="var(--color-warning)" />
+          <text x="280" y="25" fill="var(--color-warning)" font-size="11" font-weight="bold" text-anchor="middle">Futuro (Predicción/Decisión)</text>
+        `;
+        break;
+      case 'going_to':
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-dasharray="4" stroke-width="3" />
+          <polygon points="380,45 390,50 380,55" fill="${gridColor}" />
+          <line x1="120" y1="40" x2="120" y2="60" stroke="${textColor}" stroke-width="3" />
+          <text x="120" y="80" fill="${textColor}" font-size="11" font-weight="bold" text-anchor="middle">NOW (Ahora)</text>
+          
+          <path d="M 120,50 Q 200,20 280,50" fill="none" stroke="var(--color-warning)" stroke-width="3" stroke-dasharray="3" />
+          <circle cx="120" cy="50" r="6" fill="var(--color-warning)" />
+          <circle cx="280" cy="50" r="8" fill="var(--color-warning)" />
+          <text x="200" y="20" fill="var(--color-warning)" font-size="10" font-weight="bold" text-anchor="middle">Plan previo o intención</text>
+        `;
+        break;
+      default:
+        graphic = `
+          <line x1="20" y1="50" x2="380" y2="50" stroke="${gridColor}" stroke-width="3" />
+          <circle cx="200" cy="50" r="8" fill="var(--color-primary)" />
+        `;
+    }
+    
+    return `
+      <svg width="100%" height="100" viewBox="0 0 400 100" style="background:var(--bg-elevated); border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom: 1.5rem;">
+        ${graphic}
+      </svg>
+    `;
+  },
+
+  _showSideBySideComparison(tenseA, tenseB) {
+    const comparisons = {
+      'past_simple-present_perfect': {
+        title: 'Past Simple vs. Present Perfect',
+        tenseA: 'Past Simple',
+        tenseB: 'Present Perfect',
+        diff: 'El **Past Simple** se usa para acciones terminadas en un tiempo específico del pasado. El **Present Perfect** conecta el pasado con el presente y el tiempo no es específico.',
+        exA: 'I lived in London for two years. (Ya no vivo allí, está terminado).',
+        exB: 'I have lived in London for two years. (Empezó en el pasado y sigo viviendo allí ahora).',
+        signalA: 'yesterday, ago, last year, in 2015',
+        signalB: 'ever, never, just, already, yet, for, since'
+      },
+      'past_simple-past_continuous': {
+        title: 'Past Simple vs. Past Continuous',
+        tenseA: 'Past Simple',
+        tenseB: 'Past Continuous',
+        diff: 'El **Past Simple** describe una acción corta completada. El **Past Continuous** describe una acción más larga que estaba en progreso en el pasado.',
+        exA: 'I fell asleep. (Acción corta e instantánea).',
+        exB: 'I was watching a movie. (Acción continua y en progreso en el pasado).',
+        signalA: 'when, suddenly',
+        signalB: 'while, as, all afternoon'
+      },
+      'present_simple-present_continuous': {
+        title: 'Present Simple vs. Present Continuous',
+        tenseA: 'Present Simple',
+        tenseB: 'Present Continuous',
+        diff: 'El **Present Simple** se usa para hábitos permanentes, rutinas y verdades generales. El **Present Continuous** se usa para acciones temporales que están ocurriendo ahora mismo.',
+        exA: 'I speak English. (Habilidad permanente).',
+        exB: 'I am speaking English right now. (Acción ocurriendo en este instante).',
+        signalA: 'always, usually, every day, sometimes',
+        signalB: 'now, at the moment, currently, today'
+      },
+      'future_will-going_to': {
+        title: 'Future (Will) vs. Future (Going to)',
+        tenseA: 'Future with Will',
+        tenseB: 'Future with Going to',
+        diff: 'Se usa **Will** para decisiones espontáneas o predicciones generales. Se usa **Going to** para planes previos organizados o predicciones con evidencia física visible.',
+        exA: 'The phone is ringing. I will answer it! (Decisión espontánea).',
+        exB: 'Look at those dark clouds. It is going to rain! (Evidencia física).',
+        signalA: 'probably, I think, I promise, perhaps',
+        signalB: 'already decided, look at that!'
+      }
+    };
+
+    const key1 = `${tenseA}-${tenseB}`;
+    const key2 = `${tenseB}-${tenseA}`;
+    const comp = comparisons[key1] || comparisons[key2] || null;
+
+    if (!comp) return '<p style="color:var(--text-secondary);font-size:0.875rem;">Selecciona otro tiempo verbal para compararlo de forma directa.</p>';
+
+    return `
+      <div style="background:var(--bg-elevated); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1rem; margin-top:1.5rem; animation: fadeIn var(--transition-normal) ease;">
+        <h4 style="margin:0 0 0.5rem 0; color:var(--color-primary); font-size:0.95rem;">🔍 Comparación Directa: ${comp.title}</h4>
+        <p style="font-size:0.85rem; line-height:1.5; color:var(--text-secondary); margin-bottom:1rem;">${comp.diff}</p>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; font-size:0.8rem;">
+          <div style="background:var(--bg-card); padding:0.75rem; border-radius:var(--radius-sm); border-left:3px solid var(--color-primary);">
+            <strong style="color:var(--color-primary);">${comp.tenseA}</strong>
+            <div style="margin-top:0.25rem;"><strong>Ejemplo:</strong> "${comp.exA}"</div>
+            <div style="margin-top:0.25rem; color:var(--text-muted);"><strong>Señales:</strong> ${comp.signalA}</div>
+          </div>
+          
+          <div style="background:var(--bg-card); padding:0.75rem; border-radius:var(--radius-sm); border-left:3px solid var(--color-accent);">
+            <strong style="color:var(--color-accent);">${comp.tenseB}</strong>
+            <div style="margin-top:0.25rem;"><strong>Ejemplo:</strong> "${comp.exB}"</div>
+            <div style="margin-top:0.25rem; color:var(--text-muted);"><strong>Señales:</strong> ${comp.signalB}</div>
+          </div>
+        </div>
+      </div>
+    `;
   },
 
   // ---- 3. CONJUGATOR TAB ----
