@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnglishMaster — Aprende Inglés</title>
+  <meta name="description" content="Aprende inglés de forma efectiva con lecciones adaptativas, ejercicios, juegos y seguimiento de progreso personalizado." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash-screen" class="splash">
+    <div class="splash-content">
+      <div class="splash-logo">
+        <div class="logo-icon">🇬🇧</div>
+        <h1 class="splash-title">EnglishMaster</h1>
+      </div>
+      <div class="splash-loader">
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <p class="loader-text">Cargando tu experiencia de aprendizaje...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Shell -->
+  <div id="app" class="app hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span class="logo-emoji">🇬🇧</span>
+          <span class="logo-text">EnglishMaster</span>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-close-btn" aria-label="Cerrar menú">✕</button>
+      </div>
+
+      <div class="user-card">
+        <div class="user-avatar" id="nav-avatar">🎓</div>
+        <div class="user-info">
+          <div class="user-name" id="nav-username">Estudiante</div>
+          <div class="user-level" id="nav-level">A1 · Principiante</div>
+        </div>
+        <div class="user-xp-badge" id="nav-xp">0 XP</div>
+      </div>
+
+      <div class="streak-bar">
+        <span class="streak-icon">🔥</span>
+        <span class="streak-label">Racha: <strong id="nav-streak">0</strong> días</span>
+      </div>
+
+      <nav class="sidebar-nav" role="navigation" aria-label="Menú principal">
+        <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+          <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-page="assessment" id="nav-assessment">
+          <span class="nav-icon">🎯</span><span class="nav-label">Test de Nivel</span>
+        </a>
+        <a href="#" class="nav-item" data-page="lessons" id="nav-lessons">
+          <span class="nav-icon">📚</span><span class="nav-label">Lecciones</span>
+        </a>
+        <a href="#" class="nav-item" data-page="exercises" id="nav-exercises">
+          <span class="nav-icon">✏️</span><span class="nav-label">Ejercicios</span>
+        </a>
+        <a href="#" class="nav-item" data-page="vocabulary" id="nav-vocabulary">
+          <span class="nav-icon">📖</span><span class="nav-label">Vocabulario</span>
+        </a>
+        <a href="#" class="nav-item" data-page="games" id="nav-games">
+          <span class="nav-icon">🎮</span><span class="nav-label">Juegos</span>
+        </a>
+        <a href="#" class="nav-item" data-page="chat" id="nav-chat">
+          <span class="nav-icon">🤖</span><span class="nav-label">Chat con Robot</span>
+        </a>
+        <a href="#" class="nav-item" data-page="progress" id="nav-progress">
+          <span class="nav-icon">📈</span><span class="nav-label">Mi Progreso</span>
+        </a>
+        <a href="#" class="nav-item" data-page="dictionary" id="nav-dictionary">
+          <span class="nav-icon">🔍</span><span class="nav-label">Diccionario</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="theme-toggle" class="theme-btn" aria-label="Cambiar tema">
+          <span id="theme-icon">☀️</span> Modo Claro
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <button id="menu-toggle" class="menu-btn" aria-label="Abrir menú">☰</button>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-actions">
+          <div class="xp-pill" id="topbar-xp">
+            <span class="xp-icon">⭐</span>
+            <span id="topbar-xp-val">0 XP</span>
+          </div>
+          <div class="streak-pill" id="topbar-streak">
+            <span>🔥</span>
+            <span id="topbar-streak-val">0</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <main id="page-container" class="page-container">
+        <!-- Pages injected here by JS -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Onboarding Modal -->
+  <div id="onboarding-modal" class="modal-overlay hidden">
+    <div class="modal-card onboarding-card">
+      <div class="onboarding-steps">
+        <div class="onboarding-step active" id="onboard-step-1">
+          <div class="onboard-emoji">👋</div>
+          <h2>¡Bienvenido a EnglishMaster!</h2>
+          <p>Tu plataforma completa para aprender inglés de forma efectiva y divertida.</p>
+          <div class="onboard-features">
+            <div class="feature-chip">🎯 Test de nivel</div>
+            <div class="feature-chip">📚 Lecciones</div>
+            <div class="feature-chip">🎮 Juegos</div>
+            <div class="feature-chip">🤖 Chat Robot</div>
+          </div>
+          <input type="text" id="onboard-name" class="input-field" placeholder="¿Cómo te llamas?" maxlength="30" />
+          <button class="btn btn-primary btn-full" id="onboard-next-1">¡Empezar! →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievement Toast -->
+  <div id="achievement-toast" class="achievement-toast hidden">
+    <div class="toast-content">
+      <div class="toast-icon" id="toast-icon">🏆</div>
+      <div class="toast-text">
+        <div class="toast-title" id="toast-title">¡Logro desbloqueado!</div>
+        <div class="toast-desc" id="toast-desc">Descripción del logro</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- XP Popup -->
+  <div id="xp-popup" class="xp-popup hidden">+<span id="xp-popup-val">10</span> XP</div>
+
+  <!-- Scripts -->
+  <script src="js/data/vocabulary.js"></script>
+  <script src="js/data/grammar.js"></script>
+  <script src="js/data/assessment.js"></script>
+  <script src="js/data/exercises.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/modules/storage.js"></script>
+  <script src="js/modules/gamification.js"></script>
+  <script src="js/modules/speech.js"></script>
+  <script src="js/modules/spacedRep.js"></script>
+  <script src="js/modules/assessment.js"></script>
+  <script src="js/modules/lessons.js"></script>
+  <script src="js/modules/exercises.js"></script>
+  <script src="js/modules/games.js"></script>
+  <script src="js/modules/robotChat.js"></script>
+  <script src="js/modules/progress.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
