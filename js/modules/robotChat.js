@@ -140,40 +140,122 @@ const RobotChat = {
   // ============================================================
   // Render
   // ============================================================
+  // ============================================================
+  // Render
+  // ============================================================
   render(container) {
     this._userName = Storage.getUser().name || 'Student';
     const history = Storage.getChatHistory();
+    const gam = Storage.getGamification();
+
+    if (!this._currentTopic) this._currentTopic = 'general';
+
+    const topics = [
+      { id: 'general', label: '💬 General' },
+      { id: 'food', label: '🍔 Comida' },
+      { id: 'travel', label: '✈️ Viajes' },
+      { id: 'work', label: '💼 Trabajo' },
+      { id: 'hobbies', label: '🎮 Hobbies' },
+      { id: 'weather', label: '🌦️ Clima' },
+      { id: 'technology', label: '🤖 Tech' },
+      { id: 'grammar', label: '📚 Gramática' }
+    ];
 
     container.innerHTML = `
       <div class="page-header">
         <h1 class="page-title">🤖 Chat con MAX</h1>
-        <p class="page-subtitle">Practica inglés conversacional con tu robot IA</p>
+        <p class="page-subtitle">Practica tu inglés conversacional en tiempo real con MAX</p>
       </div>
 
-      <div class="chat-container">
-        <div class="chat-header">
-          <div class="robot-avatar">🤖</div>
-          <div>
-            <div class="chat-robot-name">MAX — English Practice Robot</div>
-            <div class="chat-robot-status">
-              <span class="status-dot"></span>
-              Online — Listo para practicar
+      <div class="chat-layout">
+        <!-- Main Chat Box -->
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="robot-avatar">🤖</div>
+            <div>
+              <div class="chat-robot-name">MAX — English Practice Robot</div>
+              <div class="chat-robot-status">
+                <span class="status-dot"></span>
+                Online — Sistema Operativo Activo
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="clear-chat-btn" style="margin-left:auto;color:rgba(255,255,255,0.7)">🗑️ Limpiar</button>
+          </div>
+
+          <!-- Quick Topic Header Selector -->
+          <div class="chat-topic-header">
+            <span class="chat-topic-label">Tema:</span>
+            ${topics.map(t => `<button class="chat-topic-chip ${this._currentTopic === t.id ? 'active' : ''}" data-topic-id="${t.id}">${t.label}</button>`).join('')}
+          </div>
+
+          <div class="chat-messages" id="chat-messages">
+            ${history.length === 0 ? this._renderWelcome() : history.map(m => this._renderMessage(m.role, m.text)).join('')}
+          </div>
+
+          <div class="chat-suggestions" id="chat-suggestions">
+            ${this._getSuggestions().map(s => `<button class="suggestion-chip">${s}</button>`).join('')}
+          </div>
+
+          <div class="chat-input-area">
+            <input class="chat-input" type="text" id="chat-input" placeholder="Escribe en inglés..." autocomplete="off" />
+            <button class="chat-send-btn" id="chat-send-btn">➤</button>
+          </div>
+        </div>
+
+        <!-- Robot Diagnostic Sidebar -->
+        <div class="robot-diagnostic-panel">
+          <div class="diagnostic-header">
+            <span>⚙️ MÓDULO MAX DIAGS</span>
+            <span style="font-size:0.65rem;background:var(--color-primary-light);padding:2px 6px;border-radius:4px">v1.4.2</span>
+          </div>
+
+          <!-- Console log terminal -->
+          <div class="diagnostic-screen" id="diagnostic-screen">
+            &gt; MAX BOOT SYSTEM OK...<br>
+            &gt; VOCABULARY ENGINE LOADED.<br>
+            &gt; GRAMMAR COMPILER ACTIVE.<br>
+            &gt; WAITING FOR USER INPUT...
+          </div>
+
+          <div class="diagnostic-item">
+            <div class="diagnostic-label-row">
+              <span>Uso del Procesador</span>
+              <span id="diag-cpu-val">12%</span>
+            </div>
+            <div class="diagnostic-bar">
+              <div class="diagnostic-fill" id="diag-cpu-bar" style="width: 12%; background: var(--color-primary)"></div>
             </div>
           </div>
-          <button class="btn btn-ghost btn-sm" id="clear-chat-btn" style="margin-left:auto;color:rgba(255,255,255,0.7)">🗑️</button>
-        </div>
 
-        <div class="chat-messages" id="chat-messages">
-          ${history.length === 0 ? this._renderWelcome() : history.map(m => this._renderMessage(m.role, m.text)).join('')}
-        </div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-label-row">
+              <span>Batería del Núcleo</span>
+              <span>98%</span>
+            </div>
+            <div class="diagnostic-bar">
+              <div class="diagnostic-fill" style="width: 98%; background: var(--color-accent)"></div>
+            </div>
+          </div>
 
-        <div class="chat-suggestions" id="chat-suggestions">
-          ${this._getSuggestions().map(s => `<button class="suggestion-chip">${s}</button>`).join('')}
-        </div>
-
-        <div class="chat-input-area">
-          <input class="chat-input" type="text" id="chat-input" placeholder="Type in English..." autocomplete="off" />
-          <button class="chat-send-btn" id="chat-send-btn">➤</button>
+          <div class="diagnostic-item" style="margin-top: 0.5rem;">
+            <div class="diagnostic-header" style="border-bottom:none;padding-bottom:0">📈 ESTADÍSTICAS</div>
+            <div class="diagnostic-stat-row">
+              <span class="diagnostic-stat-label">Mensajes Sesión</span>
+              <span class="diagnostic-stat-val" id="diag-msg-count">${this._sessionMsgCount}</span>
+            </div>
+            <div class="diagnostic-stat-row">
+              <span class="diagnostic-stat-label">Latencia</span>
+              <span class="diagnostic-stat-val" id="diag-latency">0ms</span>
+            </div>
+            <div class="diagnostic-stat-row">
+              <span class="diagnostic-stat-label">XP Acumulada</span>
+              <span class="diagnostic-stat-val">${gam.xp} XP</span>
+            </div>
+            <div class="diagnostic-stat-row">
+              <span class="diagnostic-stat-label">Correcciones</span>
+              <span class="diagnostic-stat-val" id="diag-corrections-count">0</span>
+            </div>
+          </div>
         </div>
       </div>`;
 
@@ -191,6 +273,49 @@ const RobotChat = {
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
+    // Handle topic chips
+    $$('.chat-topic-chip', container).forEach(chip => {
+      chip.addEventListener('click', () => {
+        $$('.chat-topic-chip', container).forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        this._currentTopic = chip.dataset.topicId;
+        
+        // Refresh suggestions and log terminal
+        const suggs = this._getSuggestions();
+        const suggsEl = document.getElementById('chat-suggestions');
+        if (suggsEl) {
+          suggsEl.innerHTML = suggs.map(s => `<button class="suggestion-chip">${s}</button>`).join('');
+          $$('.suggestion-chip', suggsEl).forEach(sChip => {
+            sChip.addEventListener('click', () => {
+              chatInput.value = sChip.textContent;
+              sendMessage();
+            });
+          });
+        }
+        
+        this._logTerminal(`TOPIC CHANGED TO: ${this._currentTopic.toUpperCase()}`);
+        this._logTerminal(`SUGGESTIONS REFRESHED.`);
+        
+        // Robot reacts with a prompt response
+        const starterPrompts = {
+          general: "Tell me something new! What's on your mind?",
+          food: "I love talking about food! What is your favorite dish?",
+          travel: "If you could fly anywhere today, where would you go?",
+          work: "What kind of job do you have, or what do you study?",
+          hobbies: "What do you like to do in your free time?",
+          weather: "How is the weather where you live right now?",
+          technology: "What app or device do you use the most?",
+          grammar: "Do you have any questions about English grammar?"
+        };
+        
+        const botMsg = starterPrompts[this._currentTopic] || "What would you like to talk about?";
+        messagesEl.insertAdjacentHTML('beforeend', this._renderMessage('bot', botMsg));
+        Storage.addChatMessage('bot', botMsg);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      });
+    });
+
+    // Wire suggestions
     $$('.suggestion-chip', container).forEach(chip => {
       chip.addEventListener('click', () => {
         chatInput.value = chip.textContent;
@@ -200,11 +325,20 @@ const RobotChat = {
 
     document.getElementById('clear-chat-btn').addEventListener('click', () => {
       Storage.clearChatHistory();
+      this._sessionMsgCount = 0;
       this.render(container);
     });
 
     // Scroll to bottom
     messagesEl.scrollTop = messagesEl.scrollHeight;
+  },
+
+  _logTerminal(text) {
+    const screen = document.getElementById('diagnostic-screen');
+    if (screen) {
+      screen.innerHTML += `<br>&gt; ${text}`;
+      screen.scrollTop = screen.scrollHeight;
+    }
   },
 
   _renderWelcome() {
@@ -227,7 +361,7 @@ const RobotChat = {
         <div>
           <div class="msg-bubble">
             ${text}
-            ${isBot ? `<button class="btn btn-ghost btn-sm btn-icon" style="margin-left:0.5rem;opacity:0.6;vertical-align:middle" onclick="Speech.speak('${text.replace(/'/g, "\\'").replace(/"/g, '\\"').substring(0,200)}')">🔊</button>` : ''}
+            ${isBot ? `<button class="btn btn-ghost btn-sm btn-icon" style="margin-left:0.5rem;padding:4px;opacity:0.6;vertical-align:middle" onclick="Speech.speak('${text.replace(/'/g, "\\'").replace(/"/g, '\\"').substring(0,200)}')">🔊</button>` : ''}
           </div>
           ${correction ? `<div class="msg-correction">⚠️ ${correction}</div>` : ''}
           <div class="msg-time">${time}</div>
@@ -236,9 +370,31 @@ const RobotChat = {
   },
 
   _handleSend(userText, messagesEl, container) {
-    // Render user message
+    this._logTerminal(`INPUT: "${truncate(userText, 25)}"`);
+    this._logTerminal(`COMPLEXITY: ${userText.split(' ').length} WORDS`);
+    
+    // CPU Spike animation
+    const cpuBar = document.getElementById('diag-cpu-bar');
+    const cpuVal = document.getElementById('diag-cpu-val');
+    if (cpuBar && cpuVal) {
+      cpuBar.style.width = '85%';
+      cpuBar.style.backgroundColor = 'var(--color-danger)';
+      cpuVal.textContent = '85%';
+    }
+
+    const start = performance.now();
     const grammarCheck = this.checkGrammar(userText);
     const correction = grammarCheck.hasError ? `Corrección: ${grammarCheck.rule}` : null;
+
+    if (grammarCheck.hasError) {
+      this._logTerminal(`GRAMMAR STACK: ERROR FOUND`);
+      const corrCountEl = document.getElementById('diag-corrections-count');
+      if (corrCountEl) {
+        corrCountEl.textContent = parseInt(corrCountEl.textContent) + 1;
+      }
+    } else {
+      this._logTerminal(`GRAMMAR STACK: OK`);
+    }
 
     messagesEl.insertAdjacentHTML('beforeend', this._renderMessage('user', userText, correction));
     Storage.addChatMessage('user', userText);
@@ -266,6 +422,23 @@ const RobotChat = {
       Storage.addChatMessage('bot', response);
       messagesEl.scrollTop = messagesEl.scrollHeight;
 
+      // Update CPU back to normal
+      if (cpuBar && cpuVal) {
+        const normCpu = Math.floor(10 + Math.random() * 15);
+        cpuBar.style.width = `${normCpu}%`;
+        cpuBar.style.backgroundColor = 'var(--color-primary)';
+        cpuVal.textContent = `${normCpu}%`;
+      }
+
+      // Latency calculation
+      const end = performance.now();
+      const latencyVal = document.getElementById('diag-latency');
+      if (latencyVal) {
+        latencyVal.textContent = `${Math.round(end - start + delay)}ms`;
+      }
+
+      this._logTerminal(`RESPONSE COMPILED OK.`);
+
       // Update suggestions
       const suggestionsEl = document.getElementById('chat-suggestions');
       if (suggestionsEl) {
@@ -284,9 +457,10 @@ const RobotChat = {
       }
 
       this._sessionMsgCount++;
-      Gamification.check();
+      const countEl = document.getElementById('diag-msg-count');
+      if (countEl) countEl.textContent = this._sessionMsgCount;
 
-      // XP for chatting
+      Gamification.check();
       Gamification.addXP(5, 'chat');
 
     }, delay);
@@ -298,28 +472,36 @@ const DictionaryPage = {
   render(container) {
     container.innerHTML = `
       <div class="page-header">
-        <h1 class="page-title">🔍 Diccionario</h1>
-        <p class="page-subtitle">Busca palabras y descubre su significado, uso y pronunciación</p>
+        <h1 class="page-title">🔍 Diccionario de Aprendizaje</h1>
+        <p class="page-subtitle">Busca palabras, aprende su pronunciación y añádelas a tu mazo de repaso</p>
       </div>
 
-      <div class="card card-glass mb-xl" style="max-width:600px;margin:0 auto 2rem">
-        <div style="display:flex;gap:0.75rem">
-          <input class="input-field" type="text" id="dict-input" placeholder="Busca una palabra en inglés o español..." />
-          <button class="btn btn-primary" id="dict-search-btn">Buscar</button>
+      <div class="card card-glass mb-xl animate-fade-in" style="max-width:650px;margin:0 auto 2.5rem;padding:1.5rem;border-color:var(--color-primary-glow)">
+        <div style="display:flex;gap:0.75rem;align-items:center">
+          <div style="position:relative;flex:1">
+            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.1rem;opacity:0.6">🔍</span>
+            <input class="input-field" type="text" id="dict-input" placeholder="Escribe una palabra en inglés o español..." style="padding-left:40px" />
+          </div>
+          <button class="btn btn-primary" id="dict-search-btn" style="padding:12px 24px">Buscar</button>
         </div>
       </div>
 
       <div id="dict-results"></div>
 
-      <div id="dict-suggestions">
-        <h3 style="font-family:var(--font-heading);font-weight:800;margin-bottom:1rem">💡 Palabras del día</h3>
+      <div id="dict-suggestions" class="animate-slide-up" style="animation-delay:0.1s">
+        <h3 style="font-family:var(--font-heading);font-weight:900;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.5rem">
+          <span>💡 Palabras sugeridas para hoy</span>
+        </h3>
         <div class="grid-3">
           ${getRandomWords(3).map(w => `
-            <div class="card card-hover" style="cursor:pointer" data-dict-word="${w.word}">
-              <div style="font-family:var(--font-heading);font-size:1.125rem;font-weight:800">${w.word}</div>
-              <div style="font-size:0.8125rem;color:var(--text-muted)">${w.phonetic}</div>
-              <div style="color:var(--color-accent);font-weight:600;margin-top:0.5rem">${w.translation}</div>
-              <span class="level-pill level-${w.level} mt-sm">${w.level}</span>
+            <div class="card card-hover card-glass" style="cursor:pointer;border-left:4px solid ${levelColor(w.level)}" data-dict-word="${w.word}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div style="font-family:var(--font-heading);font-size:1.2rem;font-weight:800;color:var(--text-primary)">${w.word}</div>
+                <span class="level-pill level-${w.level}" style="font-size:0.65rem;padding:2px 6px">${w.level}</span>
+              </div>
+              <div style="font-size:0.8rem;color:var(--text-muted);font-style:italic;margin-top:2px">${w.phonetic}</div>
+              <div style="color:var(--color-primary);font-weight:700;margin-top:0.75rem;font-size:0.95rem">${w.translation}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">${TOPIC_LABELS[w.topic] || w.topic}</div>
             </div>`).join('')}
         </div>
       </div>`;
@@ -347,38 +529,45 @@ const DictionaryPage = {
 
     if (results.length === 0) {
       resultsEl.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
-          <p>No se encontraron resultados para "<strong>${query}</strong>"</p>
-          <p class="text-muted mt-sm">Prueba con otra palabra o verifica la ortografía.</p>
+        <div class="empty-state card card-glass animate-scale-in" style="max-width:500px;margin:0 auto;padding:3rem">
+          <div class="empty-state-icon" style="font-size:3rem">🔍</div>
+          <p style="font-size:1.1rem;font-weight:700;margin-top:1rem">No se encontraron resultados para "<strong>${query}</strong>"</p>
+          <p class="text-muted mt-sm" style="font-size:0.875rem">Prueba con otra palabra o verifica la ortografía.</p>
         </div>`;
       return;
     }
 
     resultsEl.innerHTML = results.map(w => `
-      <div class="dict-result mb-lg animate-slide-up">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem">
+      <div class="card card-glass mb-lg animate-slide-up" style="border-left: 5px solid ${levelColor(w.level)}; padding: 1.5rem 2rem; position: relative">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;flex-wrap:wrap">
           <div>
-            <div class="dict-word">${w.word}</div>
-            <div class="dict-phonetic">${w.phonetic}</div>
-            <div class="dict-translation">${w.translation}</div>
-            <div class="dict-pos">${TOPIC_LABELS[w.topic] || w.topic} · ${w.level}</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+              <span style="font-family:var(--font-heading);font-size:2rem;font-weight:900;color:var(--text-primary);letter-spacing:-0.5px">${w.word}</span>
+              <span class="level-pill level-${w.level}">${w.level}</span>
+            </div>
+            <div style="font-size:0.95rem;color:var(--text-muted);font-style:italic;margin-top:2px">${w.phonetic}</div>
+            <div style="font-size:1.2rem;font-weight:700;color:var(--color-primary);margin-top:0.75rem">${w.translation}</div>
+            <div style="font-size:0.8125rem;color:var(--text-muted);margin-top:4px">Categoría: <strong>${TOPIC_LABELS[w.topic] || w.topic}</strong></div>
           </div>
           <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">
-            <span class="level-pill level-${w.level}">${w.level}</span>
-            <button class="btn btn-primary btn-sm" onclick="Speech.speak('${w.word}')">🔊 Pronunciar</button>
+            <button class="btn btn-primary btn-sm" onclick="Speech.speak('${w.word.replace(/'/g, "\\'")}')" style="box-shadow:none">🔊 Escuchar</button>
           </div>
         </div>
-        <div class="dict-section-title">Ejemplo en inglés</div>
-        <div class="dict-example" style="display:flex;align-items:center;justify-content:space-between">
-          <span>${w.example}</span>
-          <button class="btn btn-ghost btn-sm btn-icon" onclick="Speech.speak('${w.example.replace(/'/g,"\\'")}')">🔊</button>
+
+        <div style="margin-top:1.5rem;background:var(--bg-base);padding:1rem 1.25rem;border-radius:var(--radius-md);border:1px solid var(--border-color)">
+          <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);font-weight:800;margin-bottom:0.5rem">Ejemplo en Contexto</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+            <span style="font-size:1rem;color:var(--text-primary);line-height:1.5">"${w.example}"</span>
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="Speech.speak('${w.example.replace(/'/g,"\\'")}')">🔊</button>
+          </div>
+          <div style="margin-top:0.5rem;color:var(--color-accent);font-size:0.9rem;border-top:1px dashed var(--border-color);padding-top:0.5rem">
+            🇪🇸 ${w.exampleEs}
+          </div>
         </div>
-        <div class="dict-example" style="border-left-color:var(--color-accent);color:var(--text-muted)">🇪🇸 ${w.exampleEs}</div>
-        <div class="divider"></div>
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-          <button class="btn btn-accent btn-sm" onclick="Storage.logWordLearned('${w.id}');showToast('✅','Marcada','${w.word} añadida a tu vocabulario')">✅ Aprendida</button>
-          <button class="btn btn-outline btn-sm" onclick="SpacedRep.initWord('${w.id}');showToast('🎴','Repaso','${w.word} añadida al repaso espaciado')">🎴 Añadir a repaso</button>
+
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;border-top:1px solid var(--border-color);padding-top:1.25rem">
+          <button class="btn btn-accent btn-sm" onclick="Storage.logWordLearned('${w.id}');showToast('✅','Marcada','${w.word} añadida a tu vocabulario')">✅ Marcar como Aprendida</button>
+          <button class="btn btn-outline btn-sm" onclick="SpacedRep.initWord('${w.id}');showToast('🎴','Repaso','${w.word} añadida al repaso espaciado')">🎴 Añadir a Repaso Diario</button>
         </div>
       </div>`).join('');
   },

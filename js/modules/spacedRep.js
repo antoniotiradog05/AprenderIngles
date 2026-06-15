@@ -139,9 +139,9 @@ const SpacedRep = {
           <div id="sr-quality-btns" class="hidden" style="display:none">
             <p class="text-center text-muted" style="margin-bottom:0.75rem;font-size:0.875rem">¿Qué tan bien la recordaste?</p>
             <div style="display:flex;gap:0.75rem;justify-content:center">
-              <button class="btn btn-danger btn-sm" data-q="1">😖 Difícil</button>
-              <button class="btn btn-ghost btn-sm" data-q="3">😊 Regular</button>
-              <button class="btn btn-accent btn-sm" data-q="5">🌟 Fácil</button>
+              <button class="btn btn-danger btn-sm" data-q="1" style="box-shadow: 0 4px 10px rgba(244,63,94,0.2)">😖 Difícil</button>
+              <button class="btn btn-ghost btn-sm" data-q="3" style="box-shadow: 0 4px 10px rgba(245,158,11,0.1); border-color: var(--color-warning); color: var(--color-warning)">😊 Regular</button>
+              <button class="btn btn-accent btn-sm" data-q="5" style="box-shadow: 0 4px 10px rgba(16,185,129,0.2)">🌟 Fácil</button>
             </div>
           </div>
         </div>`;

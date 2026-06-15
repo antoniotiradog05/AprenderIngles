@@ -303,12 +303,20 @@ const Games = {
           </div>
 
           <div class="card card-glass" style="max-width:620px;margin:0 auto">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:1.5rem">
               <span class="level-pill level-${q.level}">${q.level}</span>
-              <div class="timer-display" id="timer-display">${timeLeft}</div>
+              <div style="display:flex;flex-direction:column;gap:4px;flex:1;max-width:240px">
+                <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:800">
+                  <span class="text-muted">Tiempo Restante</span>
+                  <span id="timer-text" style="color:var(--color-primary);font-weight:900">${timeLeft}s</span>
+                </div>
+                <div class="progress-bar" style="height:6px;background:var(--border-color)">
+                  <div class="progress-fill" id="timer-bar" style="width:100%;background:var(--color-primary);transition:width 1s linear"></div>
+                </div>
+              </div>
             </div>
 
-            <h3 style="font-size:1.0625rem;font-weight:600;margin-bottom:1.5rem">${q.question}</h3>
+            <h3 style="font-size:1.15rem;font-weight:700;margin-bottom:1.5rem;line-height:1.4">${q.question}</h3>
 
             <div style="display:flex;flex-direction:column;gap:0.75rem">
               ${q.options.map((opt, i) => `
@@ -326,12 +334,18 @@ const Games = {
       });
 
       // Timer
-      const timerEl = document.getElementById('timer-display');
+      const timerText = document.getElementById('timer-text');
+      const timerBar = document.getElementById('timer-bar');
       timer = setInterval(() => {
         timeLeft--;
-        if (timerEl) {
-          timerEl.textContent = timeLeft;
-          if (timeLeft <= 5) timerEl.classList.add('warning');
+        if (timerText) timerText.textContent = `${timeLeft}s`;
+        if (timerBar) {
+          const pct = (timeLeft / 15) * 100;
+          timerBar.style.width = `${pct}%`;
+          if (timeLeft <= 5) {
+            timerBar.style.background = 'var(--color-danger)';
+            timerText.style.color = 'var(--color-danger)';
+          }
         }
         if (timeLeft <= 0) {
           clearInterval(timer);
@@ -445,7 +459,7 @@ const Games = {
         const ans = userAnswers[i];
         displayText = displayText.replace(
           `_${b.n}_`,
-          ans ? `<strong style="color:var(--color-accent)">${ans}</strong>` : `<strong style="color:var(--color-primary)">[${b.n}]</strong>`
+          ans ? `<span style="background:rgba(16,185,129,0.15);color:var(--color-accent);padding:2px 10px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-family:var(--font-heading);font-weight:800;font-size:0.95rem;margin:0 4px">${ans}</span>` : `<span style="background:var(--color-primary-light);color:var(--color-primary);padding:2px 10px;border-radius:6px;border:1px solid var(--color-primary-glow);font-family:var(--font-heading);font-weight:800;font-size:0.95rem;margin:0 4px">[${b.n}]</span>`
         );
       });
 

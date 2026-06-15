@@ -101,11 +101,12 @@ const Progress = {
               const levelIdx = CEFR_LEVELS.indexOf(l);
               const userIdx = CEFR_LEVELS.indexOf(user.cefrLevel);
               const done = levelIdx < userIdx;
-              return `<div class="map-node ${done ? 'completed' : isCurrent ? 'current' : ''}">
-                <div class="map-node-card" style="padding:0.5rem 0.75rem">
+              const locked = levelIdx > userIdx;
+              return `<div class="map-node ${done ? 'completed' : isCurrent ? 'current' : locked ? 'locked' : ''}">
+                <div class="map-node-card" style="padding:0.6rem 1rem">
                   <span class="level-pill level-${l}">${l}</span>
-                  <span style="font-size:0.8125rem;color:var(--text-muted)">${CEFR_NAMES[l]}</span>
-                  <span>${done ? '✅' : isCurrent ? '👈' : '🔒'}</span>
+                  <span style="font-size:0.875rem;color:var(--text-secondary);font-weight:600">${CEFR_NAMES[l]}</span>
+                  <span style="font-size:1.1rem">${done ? '🟢' : isCurrent ? '⚡' : '🔒'}</span>
                 </div>
               </div>`;
             }).join('')}
