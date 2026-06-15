@@ -224,10 +224,88 @@ const Lessons = {
         </div>
       </div>
 
+      <!-- INTERACTIVE COMPARISON SANDBOX SELECTOR -->
+      <div class="card card-glass mb-lg animate-fade-in" style="padding: 1.5rem;">
+        <h4 style="margin:0 0 0.5rem 0; display:flex; align-items:center; gap:0.5rem;">⚖️ Comparador Libre de Tiempos Verbales</h4>
+        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:1.25rem;">Compara dos tiempos verbales cualesquiera de forma libre para ver sus diagramas y contrastarlos:</p>
+        
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem;">
+          <select id="compare-select-1" class="input-field" style="max-width: 250px; padding: 8px var(--space-md);">
+            <option value="present_simple">Present Simple</option>
+            <option value="present_continuous">Present Continuous</option>
+            <option value="present_perfect">Present Perfect</option>
+            <option value="past_simple" selected>Past Simple</option>
+            <option value="past_continuous">Past Continuous</option>
+            <option value="past_perfect">Past Perfect</option>
+            <option value="future_will">Future (Will)</option>
+            <option value="going_to">Future (Going to)</option>
+          </select>
+          <span style="font-weight:bold; color:var(--text-muted);">vs.</span>
+          <select id="compare-select-2" class="input-field" style="max-width: 250px; padding: 8px var(--space-md);">
+            <option value="present_simple">Present Simple</option>
+            <option value="present_continuous">Present Continuous</option>
+            <option value="present_perfect" selected>Present Perfect</option>
+            <option value="past_simple">Past Simple</option>
+            <option value="past_continuous">Past Continuous</option>
+            <option value="past_perfect">Past Perfect</option>
+            <option value="future_will">Future (Will)</option>
+            <option value="going_to">Future (Going to)</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="trigger-free-compare-btn">Comparar Tiempos</button>
+        </div>
+        
+        <div id="free-comparison-output"></div>
+      </div>
+
       <div id="timeline-tense-details" class="card card-glass animate-fade-in" style="min-height: 200px; display:none; padding: 1.5rem; border-left: 5px solid var(--color-primary); margin-bottom: 2rem;">
         <!-- Tense details loaded dynamically -->
       </div>
     `;
+
+    // Free comparison triggering logic
+    const select1 = document.getElementById('compare-select-1');
+    const select2 = document.getElementById('compare-select-2');
+    const freeCompareBtn = document.getElementById('trigger-free-compare-btn');
+    const freeCompareOutput = document.getElementById('free-comparison-output');
+
+    const updateFreeCompare = () => {
+      const tA = select1.value;
+      const tB = select2.value;
+
+      if (tA === tB) {
+        freeCompareOutput.innerHTML = `<div style="padding:1rem; color:var(--color-danger); font-size:0.85rem; font-weight:600;">⚠️ Por favor, selecciona dos tiempos verbales diferentes para comparar.</div>`;
+        return;
+      }
+
+      const svgA = this._getTenseSVG(tA);
+      const svgB = this._getTenseSVG(tB);
+      
+      const detailsA = getGrammarTopic(tA);
+      const detailsB = getGrammarTopic(tB);
+
+      let textComparison = this._showSideBySideComparison(tA, tB);
+
+      freeCompareOutput.innerHTML = `
+        <div class="animate-fade-in" style="margin-top: 1.5rem; display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+          <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md); background: rgba(0,0,0,0.02)">
+            <h5 style="margin:0 0 0.5rem 0; font-size: 0.9rem; color: var(--color-primary); font-weight: 800;">${detailsA.title}</h5>
+            <div style="transform: scale(0.9); transform-origin: top left; margin-bottom:-0.75rem;">${svgA}</div>
+            <p style="font-size:0.8rem; color:var(--text-secondary); margin: 0.5rem 0 0 0; line-height: 1.4;">${detailsA.description}</p>
+          </div>
+          <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md); background: rgba(0,0,0,0.02)">
+            <h5 style="margin:0 0 0.5rem 0; font-size: 0.9rem; color: var(--color-accent); font-weight: 800;">${detailsB.title}</h5>
+            <div style="transform: scale(0.9); transform-origin: top left; margin-bottom:-0.75rem;">${svgB}</div>
+            <p style="font-size:0.8rem; color:var(--text-secondary); margin: 0.5rem 0 0 0; line-height: 1.4;">${detailsB.description}</p>
+          </div>
+        </div>
+        <div style="margin-top: 1rem;">
+          ${textComparison}
+        </div>
+      `;
+    };
+
+    freeCompareBtn.addEventListener('click', updateFreeCompare);
+    updateFreeCompare(); // Render initial free comparison
 
     // Timeline item click listeners
     const detailsContainer = document.getElementById('timeline-tense-details');
@@ -982,6 +1060,30 @@ const Lessons = {
             </div>
           </div>
 
+          <!-- GAMIFIED INTERACTIVE SENTENCE BUILDER SANDBOX -->
+          <div class="lesson-section" style="margin-bottom: 2rem;">
+            <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">🧪 Laboratorio: Construye tu Frase</h3>
+            <div class="card card-glass" style="padding: 1.5rem;">
+              <p style="font-size:0.8rem; color:var(--text-secondary); margin-top:0; margin-bottom: 1rem;">
+                ¡Pon a prueba tu aprendizaje! Pulsa sobre los bloques de colores disponibles abajo para encajarlos y construir una frase correcta en <strong>${topic.title}</strong>:
+              </p>
+              
+              <!-- Selected blocks area -->
+              <div style="min-height: 55px; background:var(--bg-elevated); border:2px dashed var(--border-color); border-radius:var(--radius-md); padding:0.75rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom: 1rem;" id="sandbox-selected-area">
+                <span style="color:var(--text-muted); font-size:0.8rem;" id="sandbox-placeholder-text">Haz clic en los bloques de abajo para empezar a formar tu frase...</span>
+              </div>
+              
+              <!-- Available blocks area -->
+              <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom: 1.5rem;" id="sandbox-available-area"></div>
+              
+              <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                <button class="btn btn-primary btn-sm" id="sandbox-check-btn">Comprobar Frase</button>
+                <button class="btn btn-ghost btn-sm" id="sandbox-reset-btn">Reiniciar</button>
+                <span id="sandbox-feedback" style="font-size:0.875rem; font-weight:700;"></span>
+              </div>
+            </div>
+          </div>
+
           <!-- USOS CON COLORES E ICONOS -->
           <div class="lesson-section" style="margin-bottom: 2rem;">
             <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">💡 Cuándo y Cómo se usa</h3>
@@ -1050,10 +1152,156 @@ const Lessons = {
         </div>
       </div>`;
 
+    this._initSentenceBuilder(topic);
+
     document.getElementById('back-lessons-btn').addEventListener('click', () => this.render(container));
     document.getElementById('back-lessons-btn2').addEventListener('click', () => this.render(container));
     document.getElementById('practice-topic-btn').addEventListener('click', () => {
       App.navigate('exercises', { topic: topic.id });
     });
   },
+
+  // ---- 4. INTERACTIVE SENTENCE BUILDER SANDBOX LOGIC ----
+  _initSentenceBuilder(topic) {
+    // Generate sandbox data depending on grammar topic
+    let blocks = ['I', 'She', 'They', 'English', 'pizza', 'working', 'goes', 'went', 'have', 'yesterday', 'now', 'is', 'are', 'not', 'study'];
+    let valids = [];
+
+    const db = {
+      present_simple: {
+        blocks: ['I', 'She', 'works', 'work', 'doesn\'t work', 'every day', 'in a hospital', 'like', 'likes', 'pizza'],
+        valids: [
+          'She works in a hospital', 'I work every day', 'She doesn\'t work every day',
+          'I like pizza', 'She likes pizza', 'She works every day', 'I work in a hospital'
+        ]
+      },
+      present_continuous: {
+        blocks: ['I', 'She', 'They', 'am', 'is', 'are', 'studying', 'working', 'now', 'at the moment', 'not'],
+        valids: [
+          'I am studying now', 'I am working now', 'She is studying now', 'She is working now',
+          'They are studying now', 'They are working now', 'They are studying at the moment', 'She is studying at the moment'
+        ]
+      },
+      present_perfect: {
+        blocks: ['I', 'He', 'have', 'has', 'finished', 'worked', 'already', 'just', 'since 2020', 'here'],
+        valids: [
+          'I have finished', 'He has finished', 'I have worked here', 'He has worked here',
+          'I have worked since 2020', 'He has worked since 2020', 'I have just finished', 'He has just finished'
+        ]
+      },
+      past_simple: {
+        blocks: ['I', 'She', 'went', 'worked', 'didn\'t', 'go', 'work', 'yesterday', 'last week', 'to London'],
+        valids: [
+          'I went to London yesterday', 'She went to London yesterday', 'I worked yesterday', 'She worked yesterday',
+          'I didn\'t work yesterday', 'She didn\'t work yesterday', 'I didn\'t go to London last week'
+        ]
+      },
+      future_will: {
+        blocks: ['I', 'She', 'will', 'won\'t', 'help', 'you', 'tomorrow', 'probably', 'rain'],
+        valids: [
+          'I will help you', 'I will help you tomorrow', 'She will help you', 'She will help you tomorrow',
+          'I won\'t help you tomorrow', 'It will probably rain'
+        ]
+      }
+    };
+
+    const config = db[topic.id] || {
+      blocks: ['Subject', 'verb', 'object', 'adverb', 'not', 'have', 'will', 'is', 'goes', 'went'],
+      valids: ['Subject verb object']
+    };
+
+    blocks = config.blocks;
+    valids = config.valids;
+
+    const availableArea = document.getElementById('sandbox-available-area');
+    const selectedArea = document.getElementById('sandbox-selected-area');
+    const placeholder = document.getElementById('sandbox-placeholder-text');
+    const checkBtn = document.getElementById('sandbox-check-btn');
+    const resetBtn = document.getElementById('sandbox-reset-btn');
+    const feedback = document.getElementById('sandbox-feedback');
+
+    let selectedList = [];
+
+    const renderSelected = () => {
+      if (selectedList.length === 0) {
+        placeholder.style.display = 'inline';
+        // Remove active block children
+        const children = Array.from(selectedArea.children);
+        children.forEach(c => {
+          if (c.id !== 'sandbox-placeholder-text') selectedArea.removeChild(c);
+        });
+        return;
+      }
+      placeholder.style.display = 'none';
+
+      // Keep only placeholder in DOM, remove others to redraw
+      const children = Array.from(selectedArea.children);
+      children.forEach(c => {
+        if (c.id !== 'sandbox-placeholder-text') selectedArea.removeChild(c);
+      });
+
+      selectedList.forEach((word, idx) => {
+        const span = document.createElement('span');
+        span.className = 'badge badge-primary animate-fade-in';
+        span.style.cursor = 'pointer';
+        span.style.padding = '6px 12px';
+        span.style.fontSize = '0.825rem';
+        span.textContent = word;
+        span.addEventListener('click', () => {
+          selectedList.splice(idx, 1);
+          renderSelected();
+          feedback.textContent = '';
+        });
+        selectedArea.appendChild(span);
+      });
+    };
+
+    const renderAvailable = () => {
+      availableArea.innerHTML = '';
+      blocks.forEach(word => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-ghost btn-sm';
+        btn.style.borderRadius = 'var(--radius-full)';
+        btn.style.fontSize = '0.775rem';
+        btn.style.fontWeight = 'bold';
+        btn.textContent = word;
+        btn.addEventListener('click', () => {
+          selectedList.push(word);
+          renderSelected();
+          feedback.textContent = '';
+        });
+        availableArea.appendChild(btn);
+      });
+    };
+
+    resetBtn.addEventListener('click', () => {
+      selectedList = [];
+      renderSelected();
+      feedback.textContent = '';
+    });
+
+    checkBtn.addEventListener('click', () => {
+      if (selectedList.length === 0) {
+        feedback.style.color = 'var(--color-danger)';
+        feedback.textContent = '❌ ¡Agrega algunos bloques primero!';
+        return;
+      }
+
+      const sentence = selectedList.join(' ');
+      // Direct matching or lowercase checking
+      const isCorrect = valids.some(v => v.toLowerCase().replace(/[^a-zA-Z0-9\s']/g, '') === sentence.toLowerCase().replace(/[^a-zA-Z0-9\s']/g, ''));
+
+      if (isCorrect) {
+        feedback.style.color = 'var(--color-accent)';
+        feedback.textContent = '🎉 ¡Excelente! Es una estructura correcta para este tema. (+10 XP)';
+        Gamification.addXP(10, 'sandbox');
+      } else {
+        feedback.style.color = 'var(--color-danger)';
+        feedback.textContent = '❌ Esa frase no coincide con las estructuras correctas enseñadas. ¡Intenta de nuevo!';
+      }
+    });
+
+    renderAvailable();
+    renderSelected();
+  }
 };
