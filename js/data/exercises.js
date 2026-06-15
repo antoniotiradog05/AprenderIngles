@@ -668,6 +668,174 @@ const EXERCISES = [
     rule: 'Relative clauses: who (people), which (things), that (both).',
     xp: 25
   },
+  // ====================================================
+  // C1/C2 ADVANCED EXERCISES (Inversion, Subjunctive, Cleft, etc.)
+  // ====================================================
+  {
+    id: 'ex057', type: 'fill_blank', level: 'C1', topic: 'inversion',
+    title: 'Advanced Inversion',
+    instruction: 'Complete the sentence using negative inversion.',
+    template: 'Seldom ___ I seen such a breathtaking performance.',
+    answer: 'have',
+    hint: 'Use the correct auxiliary verb matching the subject "I" and the past participle "seen".',
+    explanation: 'After negative/restrictive adverbs like "seldom", we invert the auxiliary and the subject: Seldom + have + I + seen.',
+    rule: 'Negative inversion: Seldom/Rarely/Never + Auxiliary + Subject + Verb.',
+    xp: 30
+  },
+  {
+    id: 'ex058', type: 'fill_blank', level: 'C1', topic: 'subjunctive',
+    title: 'The Subjunctive Mood',
+    instruction: 'Fill in the blank with the correct form of the verb.',
+    template: 'The doctor recommended that he ___ (be) put on a diet immediately.',
+    answer: 'be',
+    hint: 'Subjunctive mood uses the base form of the verb "to be".',
+    explanation: 'Verbs of recommendation (recommend, suggest) require the subjunctive mood in the "that" clause, using the base form of the verb: "that he be".',
+    rule: 'Subjunctive: Subject + recommend/suggest + that + Subject + base verb.',
+    xp: 30
+  },
+  {
+    id: 'ex059', type: 'fill_blank', level: 'B2', topic: 'wish_if_only',
+    title: 'Wish & If Only',
+    instruction: 'Complete the sentence to express a regret about the past.',
+    template: 'I wish I ___ (study) harder when I was at university.',
+    answer: 'had studied',
+    hint: 'Expressing a past regret uses the Past Perfect.',
+    explanation: 'To express a regret about a past situation, we use wish + Past Perfect (had studied).',
+    rule: 'Wish for past regret: wish + Subject + Past Perfect.',
+    xp: 25
+  },
+  {
+    id: 'ex060', type: 'multiple_choice', level: 'C1', topic: 'inversion',
+    title: 'Advanced Inversion',
+    instruction: 'Select the correct phrase to complete the inverted sentence.',
+    sentence: 'Under no circumstances ___ you disclose this passcode.',
+    options: ['should', 'you should', 'must not', 'did you'],
+    correct: 0,
+    explanation: '"Under no circumstances" requires inversion (auxiliary before subject). "Should you" is correct.',
+    rule: 'Under no circumstances + auxiliary (should/must/can) + subject + verb.',
+    xp: 30
+  },
+  {
+    id: 'ex061', type: 'multiple_choice', level: 'C1', topic: 'subjunctive',
+    title: 'The Subjunctive Mood',
+    instruction: 'Choose the correct form of the verb.',
+    sentence: 'The manager demanded that she ___ the report before leaving.',
+    options: ['finish', 'finishes', 'finished', 'will finish'],
+    correct: 0,
+    explanation: 'Demanded requires the subjunctive mood → base verb "finish" (no -s even for third-person "she").',
+    rule: 'Subjunctive: base form of the verb (infinitive without "to") for all persons.',
+    xp: 30
+  },
+  {
+    id: 'ex062', type: 'multiple_choice', level: 'B2', topic: 'mixed_conditionals',
+    title: 'Mixed Conditionals',
+    instruction: 'Choose the correct mixed conditional combination.',
+    sentence: 'If you had listened to my advice, you ___ in trouble right now.',
+    options: ["wouldn't have been", "wouldn't be", "won't be", "weren't"],
+    correct: 1,
+    explanation: 'The condition is in the past (had listened), but the result is in the present (right now) → mixed conditional (wouldn\'t be).',
+    rule: 'Mixed Conditional: If + Past Perfect (past condition) → would + verb (present result).',
+    xp: 25
+  },
+  {
+    id: 'ex063', type: 'error_correction', level: 'C1', topic: 'subjunctive',
+    title: 'Corregir Error - Subjuntivo',
+    instruction: 'Find and correct the grammatical error in the sentence.',
+    sentence: 'It is essential that he is present at the board meeting.',
+    error: 'is present',
+    correction: 'be present',
+    explanation: '"It is essential that..." requires the subjunctive mood, so "is" must be changed to "be".',
+    rule: 'It is essential/vital/important that + subject + base form (be).',
+    xp: 30
+  },
+  {
+    id: 'ex064', type: 'error_correction', level: 'C1', topic: 'inversion',
+    title: 'Corregir Error - Inversión',
+    instruction: 'Identify and fix the word order error.',
+    sentence: 'Not only he arrived late, but he also forgot his notes.',
+    error: 'he arrived',
+    correction: 'did he arrive',
+    explanation: '"Not only" at the beginning of a clause requires auxiliary inversion. Since it is past tense, we use "did he arrive".',
+    rule: 'Not only + auxiliary (do/does/did) + subject + verb.',
+    xp: 35
+  },
+  {
+    id: 'ex065', type: 'error_correction', level: 'B2', topic: 'wish_if_only',
+    title: 'Corregir Error - Wish/Hope',
+    instruction: 'Correct the error in this wish/hope expression.',
+    sentence: 'I wish it will stop raining tomorrow.',
+    error: 'will stop',
+    correction: 'would stop',
+    explanation: 'To express a wish or desire for a change in a future action/behavior, we use would + verb (would stop), not "will". Alternatively, we use "hope" for simple future possibilities.',
+    rule: 'Wish/If only + would + verb to express desired change or annoyance.',
+    xp: 25
+  },
+  {
+    id: 'ex066', type: 'translation', level: 'C1', topic: 'inversion',
+    title: 'Traducción Avanzada',
+    instruction: 'Translate this sentence into English using inversion.',
+    sentenceEs: 'Apenas había entrado en la casa cuando empezó a llover.',
+    sentenceEn: 'Hardly had I entered the house when it started to rain.',
+    keywords: ['Hardly', 'had', 'entered', 'when'],
+    explanation: '"Apenas... cuando" translates to "Hardly/Scarcely... when" with inversion: Hardly had I entered.',
+    rule: 'Hardly/Scarcely + past perfect inversion + when + past simple.',
+    xp: 30
+  },
+  {
+    id: 'ex067', type: 'translation', level: 'C2', topic: 'cleft_sentences',
+    title: 'Traducción — Cleft Sentence',
+    instruction: 'Translate into English using a cleft sentence starting with "What".',
+    sentenceEs: 'Lo que realmente necesitamos es una nueva estrategia de marketing.',
+    sentenceEn: 'What we really need is a new marketing strategy.',
+    keywords: ['What', 'really', 'need', 'is'],
+    explanation: 'Cleft sentence structure starting with "What": What we really need is...',
+    rule: 'What cleft: What + subject + verb + IS/WAS + emphasized element.',
+    xp: 35
+  },
+  {
+    id: 'ex068', type: 'translation', level: 'B2', topic: 'mixed_conditionals',
+    title: 'Traducción — Condicional Mixto',
+    instruction: 'Translate into English.',
+    sentenceEs: 'Si me hubiera acostado temprano, hoy no estaría cansado.',
+    sentenceEn: 'If I had gone to bed early, I wouldn\'t be tired today.',
+    keywords: ['If', 'had', 'gone', 'wouldn\'t', 'be', 'today'],
+    explanation: 'Past condition (had gone to bed) with present result (wouldn\'t be tired today) requires a mixed conditional.',
+    rule: 'If + Past Perfect (condition) + would + infinitive (result).',
+    xp: 30
+  },
+  {
+    id: 'ex069', type: 'sentence_order', level: 'C1', topic: 'inversion',
+    title: 'Ordena la frase — Inversión',
+    instruction: 'Put the words in the correct order for an inverted sentence.',
+    words: ['No', 'sooner', 'had', 'she', 'finished', 'than', 'the', 'phone', 'rang'],
+    correctOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    correctSentence: 'No sooner had she finished than the phone rang.',
+    explanation: '"No sooner... than" expresses immediate sequence and requires inversion: No sooner + had + she + finished + than...',
+    rule: 'No sooner + had + subject + past participle + than + past simple.',
+    xp: 30
+  },
+  {
+    id: 'ex070', type: 'sentence_order', level: 'C2', topic: 'cleft_sentences',
+    title: 'Ordena la frase — Cleft Sentence',
+    instruction: 'Arrange the words to form a correct IT cleft sentence.',
+    words: ['It', 'was', 'my', 'brother', 'who', 'recommended', 'this', 'app', 'to', 'me'],
+    correctOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    correctSentence: 'It was my brother who recommended this app to me.',
+    explanation: 'IT cleft sentence: It + was + emphasized element (my brother) + relative clause.',
+    rule: 'It Cleft: It + is/was + emphasized noun + relative pronoun + relative clause.',
+    xp: 35
+  },
+  {
+    id: 'ex071', type: 'sentence_order', level: 'C1', topic: 'subjunctive',
+    title: 'Ordena la frase — Subjuntivo',
+    instruction: 'Order the words to make a correct subjunctive sentence.',
+    words: ['It', 'is', 'vital', 'that', 'she', 'be', 'notified', 'immediately'],
+    correctOrder: [0, 1, 2, 3, 4, 5, 6, 7],
+    correctSentence: 'It is vital that she be notified immediately.',
+    explanation: '"It is vital that" triggers subjunctive mood: she be notified (passive subjunctive).',
+    rule: 'It is vital/important + that + subject + be (base form) + past participle.',
+    xp: 30
+  },
 ];
 
 // Get exercises by type

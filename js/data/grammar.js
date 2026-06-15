@@ -443,6 +443,134 @@ const GRAMMAR_DATA = {
     commonErrors: []
   },
 
+  // ======================================
+  // WISH & IF ONLY
+  // ======================================
+  wish_if_only: {
+    id: 'wish_if_only',
+    title: 'Wish & If Only',
+    titleEs: 'Deseos y Regretos (Wish / If Only)',
+    level: 'B2',
+    category: 'grammar',
+    emoji: '💭',
+    description: 'Se usan "wish" e "if only" para expresar deseos de cambio o arrepentimientos sobre situaciones presentes, futuras o pasadas.',
+    structure: [
+      { form: 'Present/Future Desire', formula: 'wish/if only + Past Simple/Continuous', example: 'I wish I had more free time.' },
+      { form: 'Past Regret', formula: 'wish/if only + Past Perfect', example: 'I wish I hadn\'t eaten so much cake.' },
+      { form: 'Annoyance / Desired Action', formula: 'wish/if only + would + infinitive', example: 'I wish it would stop raining.' },
+    ],
+    uses: [
+      { desc: 'Deseo en el presente (imposible o poco probable)', example: 'If only I spoke French.', exampleEs: 'Ojalá hablara francés.' },
+      { desc: 'Lamento sobre el pasado', example: 'I wish I had studied harder for the exam.', exampleEs: 'Ojalá hubiera estudiado más para el examen.' },
+      { desc: 'Queja sobre un comportamiento molesto', example: 'I wish you wouldn\'t interrupt me.', exampleEs: 'Ojalá no me interrumpieras.' },
+    ],
+    tips: ['"If only" es más enfático y dramático que "wish".', 'Como en el segundo condicional, se prefiere "were" a "was" con todas las personas: "I wish I were taller."'],
+    commonErrors: [
+      { wrong: 'I wish I will pass the exam tomorrow.', right: 'I hope I pass the exam tomorrow.', rule: 'Usa "hope" para cosas posibles en el futuro y "wish" para deseos imposibles o hipotéticos.' }
+    ]
+  },
+
+  // ======================================
+  // MIXED CONDITIONALS
+  // ======================================
+  mixed_conditionals: {
+    id: 'mixed_conditionals',
+    title: 'Mixed Conditionals',
+    titleEs: 'Condicionales Mixtos',
+    level: 'B2',
+    category: 'conditionals',
+    emoji: '🔀',
+    description: 'Los condicionales mixtos combinan elementos del segundo y tercer condicional cuando el tiempo de la condición difiere del tiempo del resultado.',
+    structure: [
+      { form: 'Past Condition → Present Result', formula: 'If + Past Perfect, + would + infinitive', example: 'If I had won the lottery, I would be rich now.' },
+      { form: 'Present Condition → Past Result', formula: 'If + Past Simple, + would have + past participle', example: 'If I were taller, I would have made the basketball team.' },
+    ],
+    uses: [
+      { desc: 'Condición pasada con efecto en el presente', example: 'If I had taken that job, I would live in London today.', exampleEs: 'Si hubiera aceptado ese trabajo, hoy viviría en Londres.' },
+      { desc: 'Condición general/presente con efecto pasado', example: 'If they were smart, they wouldn\'t have bought that house.', exampleEs: 'Si fueran listos, no habrían comprado esa casa.' },
+    ],
+    tips: ['Identifica bien los marcadores temporales como "now", "today" o "yesterday" para saber qué parte va en pasado y cuál en presente.'],
+    commonErrors: [
+      { wrong: 'If I would have studied, I would be a doctor now.', right: 'If I had studied, I would be a doctor now.', rule: 'Nunca uses "would" en la cláusula del "If".' }
+    ]
+  },
+
+  // ======================================
+  // ADVANCED INVERSION
+  // ======================================
+  inversion: {
+    id: 'inversion',
+    title: 'Inversion',
+    titleEs: 'Inversión Gramatical',
+    level: 'C1',
+    category: 'grammar',
+    emoji: '🔄',
+    description: 'La inversión cambia el orden del sujeto y el verbo auxiliar, usualmente después de adverbios negativos o restrictivos, para dar énfasis y formalidad.',
+    structure: [
+      { form: 'Structure', formula: 'Negative Adverbial + Auxiliary Verb + Subject + Main Verb', example: 'Seldom have I seen such a beautiful place.' },
+    ],
+    uses: [
+      { desc: 'Después de adverbios negativos/restrictivos', example: 'Hardly had I arrived when the phone rang.', exampleEs: 'Apenas había llegado cuando sonó el teléfono.' },
+      { desc: 'Bajo ninguna circunstancia', example: 'Under no circumstances should you open this door.', exampleEs: 'Bajo ninguna circunstancia debes abrir esta puerta.' },
+      { desc: 'No solo... sino también', example: 'Not only did he win, but he also broke the record.', exampleEs: 'No solo ganó, sino que también rompió el récord.' },
+    ],
+    signals: ['seldom', 'rarely', 'never', 'hardly', 'scarcely', 'no sooner', 'under no circumstances', 'not only', 'little did I know'],
+    tips: ['Si la frase original no tiene auxiliar, debes usar do/does/did: "I realized..." → "Little did I realize..."'],
+    commonErrors: [
+      { wrong: 'Never I have seen such chaos.', right: 'Never have I seen such chaos.', rule: 'El verbo auxiliar debe preceder al sujeto tras el adverbio negativo.' }
+    ]
+  },
+
+  // ======================================
+  // THE SUBJUNCTIVE
+  // ======================================
+  subjunctive: {
+    id: 'subjunctive',
+    title: 'The Subjunctive Mood',
+    titleEs: 'El Modo Subjuntivo',
+    level: 'C1',
+    category: 'grammar',
+    emoji: '🎭',
+    description: 'El subjuntivo en inglés se usa para expresar demandas, sugerencias, consejos o necesidades de manera formal, usando la forma base del verbo.',
+    structure: [
+      { form: 'Form', formula: 'Subject + Verb/Adjective (of demand) + THAT + Subject + Base Verb (no -s, no past)', example: 'It is vital that he be present.' },
+    ],
+    uses: [
+      { desc: 'Después de verbos de demanda/sugerencia', example: 'I insist that she accept the offer.', exampleEs: 'Insisto en que acepte la oferta.' },
+      { desc: 'Después de adjetivos de importancia', example: 'It is important that they not make any noise.', exampleEs: 'Es importante que no hagan ruido.' },
+    ],
+    signals: ['insist', 'suggest', 'recommend', 'demand', 'propose', 'essential', 'important', 'vital', 'imperative'],
+    tips: ['El verbo "to be" en subjuntivo siempre es "be" para todas las personas: "that I be", "that he be".', 'La forma negativa simplemente añade "not" antes del verbo: "that he not go".'],
+    commonErrors: [
+      { wrong: 'I suggest that he goes to the doctor.', right: 'I suggest that he go to the doctor.', rule: 'Usa la forma base del verbo (infinitivo sin "to"), no añadas -s para la tercera persona.' }
+    ]
+  },
+
+  // ======================================
+  // CLEFT SENTENCES
+  // ======================================
+  cleft_sentences: {
+    id: 'cleft_sentences',
+    title: 'Cleft Sentences',
+    titleEs: 'Oraciones de Hendidura (Cleft Sentences)',
+    level: 'C2',
+    category: 'grammar',
+    emoji: '⚡',
+    description: 'Las cleft sentences dividen una oración simple en dos partes para dar un énfasis especial a un elemento específico.',
+    structure: [
+      { form: 'IT Cleft', formula: 'It + be + emphasized element + relative clause', example: 'It was John who stole the cookie.' },
+      { form: 'WHAT Cleft', formula: 'What + clause + be + emphasized element', example: 'What we need is more investment.' },
+    ],
+    uses: [
+      { desc: 'Para corregir o enfatizar la persona/cosa', example: 'It was my sister who called you, not me.', exampleEs: 'Fue mi hermana quien te llamó, no yo.' },
+      { desc: 'Para enfatizar la acción o necesidad', example: 'What I want is to sleep for ten hours.', exampleEs: 'Lo que quiero es dormir durante diez horas.' },
+    ],
+    tips: ['Ayuda a desviar la atención al sujeto o al objeto directo en la frase.', 'También se pueden usar estructuras con "all": "All I want is a quiet evening."'],
+    commonErrors: [
+      { wrong: 'What we need are more details.', right: 'What we need is more details.', rule: 'El verbo principal después de la cláusula "what" suele ir en singular (is/was).' }
+    ]
+  },
+
 };
 
 // Get all grammar topics

@@ -144,6 +144,47 @@ const VOCABULARY = [
   { id:'v098', word:'once in a blue moon', translation:'de vez en cuando / muy raramente', phonetic:'/wʌns ɪn ə bluː muːn/', level:'B2', topic:'idioms', example:'He visits once in a blue moon.', exampleEs:'Visita muy raramente.' },
   { id:'v099', word:'under the weather', translation:'no encontrarse bien', phonetic:'/ˈʌn.dər ðə ˈwɛð.ər/', level:'B1', topic:'idioms', example:"I'm feeling under the weather today.", exampleEs:'Hoy no me encuentro muy bien.' },
   { id:'v100', word:'bite the bullet', translation:'aguantar el dolor / armarse de valor', phonetic:'/baɪt ðə ˈbʊl.ɪt/', level:'B2', topic:'idioms', example:'Just bite the bullet and do it.', exampleEs:'Ármate de valor y hazlo.' },
+
+  // ---- C1/C2 Expansion ----
+  { id:'v101', word:'mitigate', translation:'mitigar / atenuar', phonetic:'/ˈmɪt.ɪ.ɡeɪt/', level:'C1', topic:'verbs', example:'We need to mitigate the risks.', exampleEs:'Necesitamos mitigar los riesgos.' },
+  { id:'v102', word:'capricious', translation:'caprichoso', phonetic:'/kəˈprɪʃ.əs/', level:'C2', topic:'adjectives', example:'The administration is capricious.', exampleEs:'La administración es caprichosa.' },
+  { id:'v103', word:'detrimental', translation:'perjudicial / nocivo', phonetic:'/ˌdɛt.rɪˈmɛn.tl/', level:'C1', topic:'adjectives', example:'Smoking is detrimental to health.', exampleEs:'Fumar es perjudicial para la salud.' },
+  { id:'v104', word:'scrutiny', translation:'escrutinio / examen riguroso', phonetic:'/ˈskruː.tɪ.ni/', level:'C1', topic:'nouns', example:'The deal is under public scrutiny.', exampleEs:'El acuerdo está bajo escrutinio público.' },
+  { id:'v105', word:'flabbergasted', translation:'estupefacto / patidifuso', phonetic:'/ˈflæb.ə.ɡɑː.stɪd/', level:'C1', topic:'adjectives', example:'I was flabbergasted by the news.', exampleEs:'Me quedé estupefacto por la noticia.' },
+  { id:'v106', word:'exquisite', translation:'exquisito / primoroso', phonetic:'/ɪkˈskwɪz.ɪt/', level:'C1', topic:'adjectives', example:'She wore an exquisite gold dress.', exampleEs:'Llevaba un vestido de oro exquisito.' },
+  { id:'v107', word:'alleviate', translation:'aliviar / mitigar', phonetic:'/əˈliː.vi.eɪt/', level:'C1', topic:'verbs', example:'This drug will alleviate the pain.', exampleEs:'Este medicamento aliviará el dolor.' },
+  { id:'v108', word:'redundant', translation:'redundante / superfluo', phonetic:'/rɪˈdʌn.dənt/', level:'B2', topic:'adjectives', example:'This sentence is redundant.', exampleEs:'Esta frase es redundante.' },
+  { id:'v109', word:'inevitable', translation:'inevitable', phonetic:'/ɪnˈɛv.ɪ.tə.bəl/', level:'B2', topic:'adjectives', example:'Change is inevitable in life.', exampleEs:'El cambio es inevitable en la vida.' },
+  { id:'v110', word:'advocate', translation:'defensor / defender', phonetic:'/ˈæd.və.keɪt/', level:'B2', topic:'verbs', example:'She advocates for human rights.', exampleEs:'Ella defiende los derechos humanos.' },
+
+  // ---- Advanced Phrasal Verbs Expansion ----
+  { id:'v111', word:'make up for', translation:'compensar', phonetic:'/meɪk ʌp fɔːr/', level:'B2', topic:'phrasal_verbs', example:'He bought flowers to make up for being late.', exampleEs:'Compró flores para compensar su retraso.' },
+  { id:'v112', word:'run into', translation:'tropezar con / encontrarse con', phonetic:'/rʌn ˈɪn.tuː/', level:'B1', topic:'phrasal_verbs', example:'I ran into an old classmate yesterday.', exampleEs:'Ayer me encontré con un antiguo compañero de clase.' },
+  { id:'v113', word:'back down', translation:'echarse atrás / ceder', phonetic:'/bæk daʊn/', level:'B2', topic:'phrasal_verbs', example:'Neither side was willing to back down.', exampleEs:'Ninguna de las partes estaba dispuesta a ceder.' },
+  { id:'v114', word:'come up with', translation:'inventar / proponer', phonetic:'/kʌm ʌp wɪð/', level:'B2', topic:'phrasal_verbs', example:'She came up with a great idea.', exampleEs:'Se le ocurrió una gran idea.' },
+  { id:'v115', word:'get over', translation:'superar / recuperarse de', phonetic:'/ɡɛt ˈoʊ.vər/', level:'B1', topic:'phrasal_verbs', example:'It took him months to get over the flu.', exampleEs:'Le tomó meses recuperarse de la gripe.' },
+  { id:'v116', word:'look down on', translation:'despreciar / mirar por encima del hombro', phonetic:'/lʊk daʊn ɒn/', level:'B2', topic:'phrasal_verbs', example:"Don't look down on people who are poor.", exampleEs:'No desprecies a la gente pobre.' },
+  { id:'v117', word:'end up', translation:'acabar / terminar (haciendo algo)', phonetic:'/ɛnd ʌp/', level:'B1', topic:'phrasal_verbs', example:'We ended up staying at home.', exampleEs:'Acabamos quedándonos en casa.' },
+  { id:'v118', word:'keep up with', translation:'mantenerse al día con / seguir el ritmo de', phonetic:'/kiːp ʌp wɪð/', level:'B2', topic:'phrasal_verbs', example:'Technology changes too fast to keep up with.', exampleEs:'La tecnología cambia demasiado rápido para mantenerse al día.' },
+  { id:'v119', word:'give in', translation:'rendirse / ceder', phonetic:'/ɡɪv ɪn/', level:'B1', topic:'phrasal_verbs', example:'The rebels finally gave in.', exampleEs:'Los rebeldes finalmente se rindieron.' },
+  { id:'v120', word:'bring about', translation:'provocar / causar', phonetic:'/brɪŋ əˈbaʊt/', level:'B2', topic:'phrasal_verbs', example:'The new law brought about many changes.', exampleEs:'La nueva ley provocó muchos cambios.' },
+
+  // ---- Advanced Idioms & Expressions Expansion ----
+  { id:'v121', word:'spill the beans', translation:'irse de la lengua / revelar un secreto', phonetic:'/spɪl ðə biːnz/', level:'B2', topic:'idioms', example:'Who spilled the beans about the project?', exampleEs:'¿Quién se fue de la lengua sobre el proyecto?' },
+  { id:'v122', word:'burn bridges', translation:'romper lazos / quemar naves', phonetic:'/bɜːrn ˈbrɪdʒ.ɪz/', level:'B2', topic:'idioms', example:"Don't burn your bridges when leaving a job.", exampleEs:'No rompas lazos al dejar un trabajo.' },
+  { id:'v123', word:'cry over spilled milk', translation:'lamentarse por lo ya hecho', phonetic:'/kraɪ ˈoʊ.vər spɪld mɪlk/', level:'B1', topic:'idioms', example:"It's done; there's no use crying over spilled milk.", exampleEs:'Ya está hecho; de nada sirve lamentarse por lo pasado.' },
+  { id:'v124', word:'barking up the wrong tree', translation:'buscar en el lugar equivocado / equivocarse de cabo a rabo', phonetic:'/ˈbɑːr.kɪŋ ʌp ðə rɒŋ triː/', level:'B2', topic:'idioms', example:'If you think I did it, you are barking up the wrong tree.', exampleEs:'Si crees que yo lo hice, te estás equivocando por completo.' },
+  { id:'v125', word:'piece of cake', translation:'pan comido / facilísimo', phonetic:'/piːs əv keɪk/', level:'A2', topic:'idioms', example:'The exam was a piece of cake!', exampleEs:'¡El examen fue pan comido!' },
+  { id:'v126', word:'take it with a grain of salt', translation:'tomar algo con pinzas / no creerse todo', phonetic:'/teɪk ɪt wɪð ə ɡreɪn əv sɔːlt/', level:'B2', topic:'idioms', example:'You must take his stories with a grain of salt.', exampleEs:'Debes tomar sus historias con pinzas.' },
+  { id:'v127', word:'through thick and thin', translation:'en las buenas y en las malas', phonetic:'/θruː θɪk ænd θɪn/', level:'B2', topic:'idioms', example:'They stayed together through thick and thin.', exampleEs:'Siguieron juntos en las buenas y en las malas.' },
+  { id:'v128', word:'best of both worlds', translation:'lo mejor de ambos mundos', phonetic:'/bɛst əv boʊθ wɜːrldz/', level:'B2', topic:'idioms', example:'Living in the country and working in the city is the best of both worlds.', exampleEs:'Vivir en el campo y trabajar en la ciudad es lo mejor de ambos mundos.' },
+  { id:'v129', word:'cost a fortune', translation:'costar una fortuna', phonetic:'/kɒst ə ˈfɔːr.tʃuːn/', level:'B1', topic:'expressions', example:'This ring must have cost a fortune.', exampleEs:'Este anillo debe haber costado una fortuna.' },
+  { id:'v130', word:'in the long run', translation:'a la larga', phonetic:'/ɪn ðə lɒŋ rʌn/', level:'B1', topic:'expressions', example:'It will save us money in the long run.', exampleEs:'A la larga nos ahorrará dinero.' },
+  { id:'v131', word:'make matters worse', translation:'para colmo / empeorar las cosas', phonetic:'/meɪk ˈmæt.ərz wɜːrs/', level:'B2', topic:'expressions', example:'To make matters worse, it started to pour.', exampleEs:'Para colmo, empezó a llover a cántaros.' },
+  { id:'v132', word:'on the tip of my tongue', translation:'en la punta de la lengua', phonetic:'/ɒn ðə tɪp əv maɪ tʌŋ/', level:'B1', topic:'idioms', example:"His name is on the tip of my tongue.", exampleEs:'Su nombre lo tengo en la punta de la lengua.' },
+  { id:'v133', word:'out of the blue', translation:'de repente / de la nada', phonetic:'/aʊt əv ðə bluː/', level:'B1', topic:'idioms', example:'She called me out of the blue.', exampleEs:'Me llamó de la nada.' },
+  { id:'v134', word:'read between the lines', translation:'leer entre líneas', phonetic:'/riːd bɪˈtwiːn ðə laɪnz/', level:'B2', topic:'idioms', example:'You need to read between the lines to find the truth.', exampleEs:'Tienes que leer entre líneas para descubrir la verdad.' },
+  { id:'v135', word:'safe and sound', translation:'sano y salvo', phonetic:'/seɪf ænd saʊnd/', level:'B1', topic:'idioms', example:'They arrived home safe and sound.', exampleEs:'Llegaron a casa sanos y salvos.' },
 ];
 
 // Topic labels
