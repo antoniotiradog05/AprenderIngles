@@ -887,6 +887,39 @@ const Lessons = {
   },
 
   // ---- SINGLE TOPIC DETAILED VIEW ----
+  _formatFormulaToBlocks(formula) {
+    const parts = formula.split('+');
+    return `<div style="display:flex; flex-wrap:wrap; gap:0.35rem; align-items:center; margin-top:0.4rem; margin-bottom:0.4rem;">
+      ${parts.map((p, idx) => {
+        let clean = p.trim();
+        let bg = 'var(--bg-elevated)';
+        let color = 'var(--text-secondary)';
+        let border = 'var(--border-color)';
+        
+        if (/subject/i.test(clean)) {
+          bg = 'rgba(59, 130, 246, 0.12)';
+          color = '#2563eb';
+          border = 'rgba(59, 130, 246, 0.3)';
+        } else if (/verb|work|eat|go|write|speak|finished/i.test(clean)) {
+          bg = 'rgba(239, 68, 68, 0.12)';
+          color = '#dc2626';
+          border = 'rgba(239, 68, 68, 0.3)';
+        } else if (/not|don't|doesn't|haven't|hasn't|won't|didn't|hadn't/i.test(clean)) {
+          bg = 'rgba(244, 63, 94, 0.12)';
+          color = '#e11d48';
+          border = 'rgba(244, 63, 94, 0.3)';
+        } else if (/am\/is\/are|was\/were|have\/has|had|will|would|be/i.test(clean)) {
+          bg = 'rgba(16, 185, 129, 0.12)';
+          color = '#059669';
+          border = 'rgba(16, 185, 129, 0.3)';
+        }
+        
+        const plusSign = idx > 0 ? '<span style="color:var(--text-muted); font-weight:bold; margin:0 0.1rem;">+</span>' : '';
+        return `${plusSign}<span style="background:${bg}; color:${color}; border:1px solid ${border}; padding: 4px 10px; border-radius: var(--radius-sm); font-size:0.75rem; font-family:monospace; font-weight:700; display:inline-block; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">${clean}</span>`;
+      }).join('')}
+    </div>`;
+  },
+
   _renderTopic(container, topicId) {
     const topic = getGrammarTopic(topicId);
     if (!topic) return;
@@ -896,89 +929,121 @@ const Lessons = {
     Gamification.unlock('first_lesson');
     Gamification.check();
 
+    // Map form names to visual styles
+    const formStyles = {
+      'Affirmative': { title: 'Afirmativo (+)', color: 'var(--color-accent)', bg: 'rgba(16, 185, 129, 0.03)', border: 'var(--color-accent)' },
+      'Negative': { title: 'Negativo (-)', color: 'var(--color-danger)', bg: 'rgba(244, 63, 94, 0.03)', border: 'var(--color-danger)' },
+      'Question': { title: 'Pregunta (?)', color: 'var(--color-primary)', bg: 'rgba(99, 102, 241, 0.03)', border: 'var(--color-primary)' },
+      'Structure': { title: 'Estructura Principal', color: 'var(--color-primary)', bg: 'var(--bg-card)', border: 'var(--color-primary)' }
+    };
+
     container.innerHTML = `
       <div class="animate-slide-right">
         <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
           <button class="btn btn-ghost btn-sm" id="back-lessons-btn">← Volver</button>
           <span class="level-pill level-${topic.level}">${topic.level}</span>
-          <span class="badge badge-primary">${topic.category}</span>
+          <span class="badge badge-primary">${topic.category === 'tenses' ? '⏰ Tiempos Verbales' : topic.category === 'conditionals' ? '🔀 Condicionales' : '📝 Gramática'}</span>
         </div>
 
         <div class="lesson-content">
-          <div class="page-header">
-            <h1 class="page-title">${topic.emoji} ${topic.title}</h1>
-            <p class="page-subtitle">${topic.titleEs}</p>
+          
+          <!-- VISUAL HEADER BANNERS -->
+          <div class="card card-gradient mb-lg" style="padding: 2rem; position:relative; overflow:hidden; border-radius: var(--radius-xl);">
+            <div style="font-size: 3.5rem; position:absolute; right:1.5rem; bottom:-0.5rem; opacity:0.15; font-family:var(--font-heading);">${topic.emoji}</div>
+            <h1 class="page-title" style="color:white; margin:0; font-size:1.85rem;">${topic.emoji} ${topic.title}</h1>
+            <p class="page-subtitle" style="color:rgba(255,255,255,0.85); margin-top:0.25rem; font-size: 1.05rem;">${topic.titleEs}</p>
+            <p style="margin-top: 1rem; font-size:0.925rem; color:rgba(255,255,255,0.9); line-height:1.6; max-width: 80%;">${topic.description}</p>
           </div>
 
-          <div class="card card-glass mb-lg">
-            <p style="font-size:0.9375rem;color:var(--text-secondary);line-height:1.7">${topic.description}</p>
+          <!-- STRUCTURE SECTION WITH VISUAL BLOCK DIAGRAMS -->
+          <div class="lesson-section" style="margin-bottom: 2rem;">
+            <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">📐 Fórmulas y Construcción</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+              ${topic.structure.map(s => {
+                const style = formStyles[s.form] || formStyles['Structure'];
+                return `
+                  <div class="card animate-fade-in" style="background:${style.bg}; border: 1.5px solid ${style.border}; padding: 1.25rem; border-radius: var(--radius-lg); position:relative;">
+                    <div style="font-weight:800; font-size:0.9rem; margin-bottom:0.5rem; color:${style.color}; text-transform:uppercase; letter-spacing:0.5px;">${style.title}</div>
+                    
+                    <div style="margin-bottom:0.75rem;">
+                      <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.15rem; font-weight:600;">FÓRMULA:</span>
+                      ${this._formatFormulaToBlocks(s.formula)}
+                    </div>
+                    
+                    <div style="border-top:1px solid var(--border-color); padding-top:0.75rem; margin-top:0.75rem;">
+                      <span style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:0.25rem; font-weight:600;">EJEMPLO:</span>
+                      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-elevated); padding:0.5rem 0.75rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                        <span class="example-en" style="font-weight:700; font-size:0.95rem; color:var(--text-primary); font-family:var(--font-heading);">${s.example}</span>
+                        <button class="btn btn-ghost btn-sm btn-icon" style="padding:4px; font-size:0.75rem;" onclick="Speech.speak('${s.example.replace(/'/g,"\\'")}')">🔊</button>
+                      </div>
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
           </div>
 
-          <div class="lesson-section">
-            <h3>📐 Estructura</h3>
-            ${topic.structure.map(s => `
-              <div class="rule-box mb-md" style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
-                <div style="font-weight:700;margin-bottom:0.5rem;color:var(--color-primary)">${s.form}</div>
-                <div style="font-family:monospace;background:var(--bg-elevated);padding:0.5rem 0.75rem;border-radius:var(--radius-sm);margin-bottom:0.5rem;font-size:0.9rem;border:1px dashed var(--border-color);">${s.formula}</div>
-                <div class="example-box" style="margin:0; display:flex; justify-content:space-between; align-items:center;">
-                  <div style="display:flex; gap:0.5rem; align-items:center;">
-                    <span class="example-icon">✏️</span>
-                    <span class="example-en" style="font-weight:600; font-size:0.95rem;">${s.example}</span>
+          <!-- USOS CON COLORES E ICONOS -->
+          <div class="lesson-section" style="margin-bottom: 2rem;">
+            <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">💡 Cuándo y Cómo se usa</h3>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+              ${topic.uses.map(u => `
+                <div class="card card-hover" style="border-left: 4px solid var(--color-primary); padding: 1rem 1.25rem; display:flex; justify-content:space-between; align-items:center; gap: 1rem;">
+                  <div style="flex:1">
+                    <span style="font-size:0.725rem; color:var(--color-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:inline-block; margin-bottom:0.25rem;">📌 ${u.desc}</span>
+                    <div class="example-en" style="font-size:1.1rem; font-weight:700; color:var(--text-primary); font-family:var(--font-heading);">${u.example}</div>
+                    ${u.exampleEs ? `<div class="example-es" style="font-size:0.875rem; color:var(--text-secondary); margin-top:0.15rem; font-style:italic;">${u.exampleEs}</div>` : ''}
                   </div>
-                  <button class="btn btn-ghost btn-sm btn-icon" onclick="Speech.speak('${s.example.replace(/'/g,"\\'")}')">🔊</button>
-                </div>
-              </div>`).join('')}
+                  <button class="btn btn-ghost btn-sm btn-icon" style="flex-shrink:0;" onclick="Speech.speak('${u.example.replace(/'/g,"\\'")}')">🔊</button>
+                </div>`).join('')}
+            </div>
           </div>
 
-          <div class="lesson-section">
-            <h3>💡 Usos y Ejemplos</h3>
-            ${topic.uses.map(u => `
-              <div class="example-box mb-md" style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md); display:flex; justify-content:space-between; align-items:center; gap: 1rem;">
-                <div style="flex:1">
-                  <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.25rem;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;">${u.desc}</div>
-                  <div class="example-en" style="font-size:1.05rem; font-weight:600; color:var(--text-primary);">${u.example}</div>
-                  ${u.exampleEs ? `<div class="example-es" style="font-size:0.875rem; color:var(--text-secondary); margin-top:2px;">${u.exampleEs}</div>` : ''}
-                </div>
-                <button class="btn btn-ghost btn-sm btn-icon" onclick="Speech.speak('${u.example.replace(/'/g,"\\'")}')">🔊</button>
-              </div>`).join('')}
-          </div>
-
+          <!-- SIGNAL WORDS VISUAL PILLS -->
           ${topic.signals && topic.signals.length ? `
-          <div class="lesson-section">
-            <h3>⏰ Palabras señal (Signal Words)</h3>
-            <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
-              ${topic.signals.map(s => `<span class="badge badge-warning" style="font-size:0.8rem; padding: 4px 10px;">${s}</span>`).join('')}
+          <div class="lesson-section" style="margin-bottom: 2rem;">
+            <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">⏰ Palabras clave (Time Markers)</h3>
+            <div style="background:var(--bg-card); border:1px solid var(--border-color); padding: 1.25rem; border-radius:var(--radius-lg);">
+              <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.75rem 0;">Estas palabras o expresiones suelen indicar el uso de este tiempo verbal:</p>
+              <div style="display:flex;flex-wrap:wrap;gap:0.4rem">
+                ${topic.signals.map(s => `<span class="badge badge-warning" style="font-size:0.8rem; padding: 5px 12px; font-weight:700; box-shadow:0 1px 3px rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25);">${s}</span>`).join('')}
+              </div>
             </div>
           </div>` : ''}
 
+          <!-- TIPS & TRICKS VISUAL CARDS -->
           ${topic.tips && topic.tips.length ? `
-          <div class="lesson-section">
-            <h3>🧠 Consejos y trucos de estudio</h3>
-            ${topic.tips.map(t => `
-              <div style="background:var(--color-accent-light);border:1px solid var(--color-accent);border-radius:var(--radius-md);padding:0.75rem 1rem;margin-bottom:0.5rem;font-size:0.875rem;color:var(--text-secondary);display:flex;gap:0.5rem;align-items:start;">
-                <span>💡</span>
-                <span>${t}</span>
-              </div>`).join('')}
+          <div class="lesson-section" style="margin-bottom: 2rem;">
+            <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">🧠 Trucos de Estudio</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+              ${topic.tips.map(t => `
+                <div style="background:var(--color-accent-light); border:1px solid var(--color-accent); border-radius:var(--radius-lg); padding: 1.25rem; display:flex; gap:0.75rem; align-items:start; box-shadow:0 2px 8px rgba(16,185,129,0.05);">
+                  <span style="font-size:1.5rem; line-height:1;">💡</span>
+                  <span style="font-size:0.875rem; color:var(--text-secondary); line-height:1.5; font-weight:500;">${t}</span>
+                </div>`).join('')}
+            </div>
           </div>` : ''}
 
+          <!-- COMMON ERRORS CALLOUTS -->
           ${topic.commonErrors && topic.commonErrors.length ? `
-          <div class="lesson-section">
-            <h3>⚠️ Evita estos errores comunes</h3>
-            ${topic.commonErrors.map(e => `
-              <div class="card" style="margin-bottom:0.75rem;border-color:var(--color-danger); background:rgba(244,63,94,0.02)">
-                <div style="display:flex;align-items:flex-start;gap:1rem">
-                  <div style="flex:1">
-                    <div style="color:var(--color-danger);font-size:0.9rem;text-decoration:line-through;margin-bottom:0.25rem;font-weight:600;">❌ ${e.wrong}</div>
-                    <div style="color:var(--color-accent);font-size:0.9rem;margin-bottom:0.5rem;font-weight:600;">✅ ${e.right}</div>
-                    <div style="font-size:0.8125rem;color:var(--text-muted)">📌 <strong>Regla:</strong> ${e.rule}</div>
+          <div class="lesson-section" style="margin-bottom: 2rem;">
+            <h3 style="display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">⚠️ Evita errores comunes</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
+              ${topic.commonErrors.map(e => `
+                <div class="card" style="border: 1.5px solid var(--color-danger); background:rgba(244,63,94,0.02); padding: 1.25rem; border-radius: var(--radius-lg); display:flex; flex-direction:column; justify-content:space-between;">
+                  <div>
+                    <div style="color:var(--color-danger); font-size:0.9rem; text-decoration:line-through; margin-bottom:0.25rem; font-weight:800; display:flex; align-items:center; gap:0.5rem;"><span>❌</span> ${e.wrong}</div>
+                    <div style="color:var(--color-accent); font-size:0.925rem; margin-bottom:0.75rem; font-weight:800; display:flex; align-items:center; gap:0.5rem;"><span>✅</span> ${e.right}</div>
                   </div>
-                </div>
-              </div>`).join('')}
+                  <div style="font-size:0.8rem; color:var(--text-secondary); background:var(--bg-elevated); padding: 6px 10px; border-radius: var(--radius-sm); border:1px solid var(--border-color); line-height:1.4;">
+                    <strong>Explicación:</strong> ${e.rule}
+                  </div>
+                </div>`).join('')}
+            </div>
           </div>` : ''}
 
-          <div class="divider" style="margin: 2rem 0;"></div>
+          <div class="divider" style="margin: 2rem 0; border-color: var(--border-color);"></div>
 
-          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom: 2rem;">
             <button class="btn btn-primary" id="practice-topic-btn">✏️ Practicar este tema</button>
             <button class="btn btn-ghost" id="back-lessons-btn2">← Volver al Centro de Estudio</button>
           </div>
